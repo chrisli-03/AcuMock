@@ -1,0 +1,9 @@
+{
+  "/api/systemMode": {
+    "method": "get",
+    "status": 400,
+    "data": {
+      "systemMode": 1
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "acumock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "portfinder": "^1.0.25"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
