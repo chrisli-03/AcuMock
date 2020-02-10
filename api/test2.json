@@ -1,9 +1,12 @@
 {
-  "/api/systemMode": {
-    "method": "get",
-    "status": 400,
-    "data": {
-      "systemMode": 1
+  "port": 8001,
+  "routes": {
+    "/api/systemMode": {
+      "method": "get",
+      "status": 400,
+      "data": {
+        "systemMode": 1
+      }
     }
   }
 }
