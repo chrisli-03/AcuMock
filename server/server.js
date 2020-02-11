@@ -44,10 +44,8 @@ const startServer = mockServers => {
   const port = 3000
 
   app.use(bodyParser.json())
+  app.use(express.static(path.join(__dirname, '../build')))
 
-  app.get('/', basicRequestHandler((req, res) => {
-    // res.sendFile(__dirname + '/index.html')
-  }))
   app.get('/api/mock_server', basicRequestHandler((req, res) => {
     res.status(200).send([...mockServers.keys()])
   }))
