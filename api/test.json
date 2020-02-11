@@ -1,4 +1,5 @@
 {
+  "name": "test",
   "port": 8000,
   "routes": {
     "/api/systemMode": {
