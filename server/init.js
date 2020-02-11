@@ -1,8 +1,8 @@
 const path = require('path')
 const fs = require('fs')
-const MockServer = require('./src/MockServer')
+const MockServer = require('./MockServer')
 
-const { readMockServerFile } = require('./src/fileHandler')
+const { readMockServerFile } = require('./fileHandler')
 
 const init = mockServers => {
   const apiDirectory = path.join(__dirname, 'api')

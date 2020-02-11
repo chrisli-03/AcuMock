@@ -4,8 +4,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { check, validationResult } = require('express-validator')
 
-const MockServer = require('./src/MockServer')
-const { readMockServerFile, createMockServerFile, deleteMockServerFile } = require('./src/fileHandler')
+const MockServer = require('./MockServer')
+const { readMockServerFile, createMockServerFile, deleteMockServerFile } = require('./fileHandler')
 
 const basicRequestHandler = fn => (req, res) => {
   try {
@@ -46,7 +46,7 @@ const startServer = mockServers => {
   app.use(bodyParser.json())
 
   app.get('/', basicRequestHandler((req, res) => {
-    res.sendFile(__dirname + '/index.html')
+    // res.sendFile(__dirname + '/index.html')
   }))
   app.get('/api/mock_server', basicRequestHandler((req, res) => {
     res.status(200).send([...mockServers.keys()])

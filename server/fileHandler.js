@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const readMockServerFile = (name) => {
-  const filepath = path.join(__dirname, `../api/${name}.json`)
+  const filepath = path.join(__dirname, `api/${name}.json`)
   if (!fs.existsSync(filepath)) {
     throw new Error('Mock Server Does Not Exist.')
   }
@@ -10,14 +10,14 @@ const readMockServerFile = (name) => {
 }
 
 const createMockServerFile = (name, data) => {
-  if (fs.existsSync(path.join(__dirname, `../api/${name}.json`))) {
+  if (fs.existsSync(path.join(__dirname, `api/${name}.json`))) {
     throw new Error('Mock Server Exists.')
   }
-  fs.writeFileSync(path.join(__dirname, `../api/${name}.json`), JSON.stringify(data, null, 2))
+  fs.writeFileSync(path.join(__dirname, `api/${name}.json`), JSON.stringify(data, null, 2))
 }
 
 const deleteMockServerFile = (name, data) => {
-  const filepath = path.join(__dirname, `../api/${name}.json`)
+  const filepath = path.join(__dirname, `api/${name}.json`)
   if (!fs.existsSync(filepath)) {
     throw new Error('Mock Server Does Not Exist.')
   }
