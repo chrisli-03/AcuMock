@@ -1,13 +1,18 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-const rootReducer = combineReducers({
+import { mockServerListReducer } from './mockServerList/reducers'
+import { mockServersReducer } from './mockServer/reducers'
 
+const rootReducer = combineReducers({
+  mockServerList: mockServerListReducer,
+  mockServers: mockServersReducer
 })
 
-export default function configureStore() {
+export default function configureStore(preloadedState) {
   return createStore(
     rootReducer,
+    preloadedState,
     applyMiddleware(thunkMiddleware)
   )
 }
