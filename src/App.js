@@ -1,17 +1,23 @@
-import React from 'react';
-import Footer from './components/Footer.js'
-import AddTodo from './containers/AddTodo'
-import VisibleTodoList from './containers/VisibleTodoList'
-import './App.css';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom'
+import './App.css'
 
 function App() {
   return (
-    <div>
-      <AddTodo />
-      <VisibleTodoList />
-      <Footer />
-    </div>
-  );
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/" exact>
+            <div>test</div>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  )
 }
 
-export default App;
+export default App
