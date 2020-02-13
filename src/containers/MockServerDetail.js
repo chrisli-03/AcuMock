@@ -172,6 +172,73 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
     })
   }
 
+  const insertParam = (event, name, key) => {
+    event.preventDefault()
+    const { name: newParam, variant } = [...name.substring(1).split('.'), `_${key}`].reduce((acc, n) => acc[n], insertData)
+    if (!variant) {
+      console.log('no variant')
+      return
+    }
+    if (typeof [...name.substring(1).split('.'), `${key}`].reduce((acc, n) => acc[n], mockServerData)[newParam] !== 'undefined') {
+      console.log('exist')
+      return
+    }
+
+    switch (variant) {
+      case 'text':
+      case 'number':
+      case 'boolean':
+        updateMockServerData({
+          type: UPDATE,
+          key: `._configurations$${name}.${key}.${newParam}`,
+          payload: {
+            "type": "input",
+            "variant": variant
+          }
+        })
+        updateMockServerData({
+          type: UPDATE,
+          key: `${name}.${key}.${newParam}`,
+          payload: ''
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}._${key}`,
+          payload: ''
+        })
+        break
+      case 'object':
+      case 'array':
+        updateMockServerData({
+          type: UPDATE,
+          key: `._configurations$${name}.${key}.${newParam}`,
+          payload: {}
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}.${key}._${newParam}`,
+          payload: { name: '', variant: '' }
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}.${key}.${newParam}`,
+          payload: {}
+        })
+        updateMockServerData({
+          type: UPDATE,
+          key: `${name}.${key}.${newParam}`,
+          payload: {}
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}._${key}`,
+          payload: ''
+        })
+      default:
+        return
+    }
+  }
+
   const handleSubmit = event => {
     console.log(mockServerData)
     event.preventDefault()
@@ -209,13 +276,14 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                     value={insertData[`_${key}`] ? insertData[`_${key}`].variant : ''}
                     onChange={handleInsertChange}
                   >
+                    <option value="" disabled>--select--</option>
                     <option value="text">text</option>
                     <option value="number">number</option>
                     <option value="boolean">boolean</option>
                     <option value="object">object</option>
                     <option value="array">array</option>
                   </select>
-                  <button onClick={event => insertAPI(event, name, key)}>+</button>
+                  <button onClick={event => insertParam(event, name, key)}>+</button>
                 </div>
                 : null}
             </div>
