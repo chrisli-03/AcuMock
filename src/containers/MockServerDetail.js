@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner'
 
 const INIT = 'INIT'
 const UPDATE = 'UPDATE'
+const INSERT = 'INSERT'
 
 const recursiveStateChange = (state, keys, level, value) => {
   return Object.assign({}, state, {
@@ -20,23 +21,82 @@ const reducer = (state, action) => {
       return action.payload
     case UPDATE:
       const keys = action.key.split('.')
-      return recursiveStateChange(state, keys, 0, action.payload)
+      return recursiveStateChange(state, keys, 1, action.payload)
+    case INSERT:
+      return state
     default:
       return state
+  }
+}
+
+const defaultMockServer = {
+  name: '',
+  port: '',
+  routes: {
+    get: {},
+    post: {},
+    put: {},
+    patch: {},
+    delete: {}
+  },
+  _configurations$: {
+    name: '',
+    port: '',
+    routes: {
+      get: {},
+      post: {},
+      put: {},
+      patch: {},
+      delete: {}
+    }
+  }
+}
+
+const defaultInsertData = {
+  routes: {
+    get: {},
+    post: {},
+    put: {},
+    patch: {},
+    delete: {}
   }
 }
 
 const MockServerDetail = ({ mockServers, getMockServer }) => {
   const { name } = useParams()
   const mockServer = mockServers[name]
-  const [mockServerData, updateMockServerData] = useReducer(reducer, { name: '', port: '', routes: {} })
+  const [mockServerData, updateMockServerData] = useReducer(reducer, defaultMockServer)
+  const [insertData, updateInsertData] = useReducer(reducer, defaultInsertData)
 
   useEffect(() => {
     if (name) getMockServer(name)
   }, [getMockServer, name])
 
   useEffect(() => {
-    if (mockServer && !mockServer.fetching) updateMockServerData({ type: INIT, payload: mockServer.data })
+    if (mockServer && !mockServer.fetching) {
+      updateMockServerData({ type: INIT, payload: mockServer.data })
+      const insertData = {
+        routes: {
+          _get: { name: '', type: '' },
+          _post: { name: '', type: '' },
+          _put: { name: '', type: '' },
+          _patch: { name: '', type: '' },
+          _delete: { name: '', type: '' }
+        }
+      }
+      const generateInsertData = (routes, insertData) => {
+        Object.keys(routes).forEach(key => {
+          if (typeof routes[key] === 'object') {
+            insertData[`_${key}`] = { name: '', variant: '' }
+            insertData[key] = {}
+            generateInsertData(routes[key], insertData[key])
+          }
+        })
+        return insertData
+      }
+      generateInsertData(mockServer.data.routes, insertData.routes)
+      updateInsertData({ type: INIT, payload: insertData })
+    }
   }, [mockServer])
 
   if (!mockServer || mockServer.fetching) {
@@ -54,10 +114,160 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
     event.preventDefault()
   }
 
+  const handleInsertChange = event => {
+    updateInsertData({
+      type: UPDATE,
+      key: event.target.dataset.key,
+      payload: event.target.value
+    })
+    event.preventDefault()
+  }
+
+  const insertAPI = (event, name, key) => {
+    event.preventDefault()
+    const newAPI = [...name.substring(1).split('.'), `_${key}`].reduce((acc, n) => acc[n], insertData).name
+    if (!/^\//.test(newAPI)) {
+      console.log('not valid')
+      return
+    }
+    if (typeof [...name.substring(1).split('.'), `${key}`].reduce((acc, n) => acc[n], mockServerData)[newAPI] !== 'undefined') {
+      console.log('exist')
+      return
+    }
+    updateMockServerData({
+      type: UPDATE,
+      key: `._configurations$${name}.${key}.${newAPI}`,
+      payload: {
+        "status": {
+          "type": "input",
+          "variant": "number"
+        },
+        "data": {}
+      }
+    })
+    updateInsertData({
+      type: UPDATE,
+      key: `${name}.${key}._${newAPI}`,
+      payload: { name: '', variant: '' }
+    })
+    updateInsertData({
+      type: UPDATE,
+      key: `${name}.${key}.${newAPI}`,
+      payload: {
+        "_data": {}
+      }
+    })
+    updateMockServerData({
+      type: UPDATE,
+      key: `${name}.${key}.${newAPI}`,
+      payload: {
+        "status": 200,
+        "data": {}
+      }
+    })
+    updateInsertData({
+      type: UPDATE,
+      key: `${name}._${key}`,
+      payload: ''
+    })
+  }
+
+  const handleSubmit = event => {
+    console.log(mockServerData)
+    event.preventDefault()
+  }
+
+  const generateRouteForm = (routes, name, configurations, insertData) => {
+    return Object.keys(routes).filter(route => route !== '_configurations$').map(key => {
+      const id = `${name}.${key}`
+      if (Array.isArray(routes[key])) return []
+      if (typeof routes[key] === 'object') {
+        return (
+          <div key={id}>
+            <div>{key}</div>
+            <div style={{paddingLeft: '1rem'}}>
+              {generateRouteForm(routes[key], id, configurations[key], insertData[key])}
+              {/^\.routes.(get|post|put|patch|delete)$/.test(id) ?
+                <div>
+                  <input
+                    data-key={`${name}._${key}.name`}
+                    value={insertData[`_${key}`] ? insertData[`_${key}`].name : ''}
+                    onChange={handleInsertChange}
+                  />
+                  <button onClick={event => insertAPI(event, name, key)}>+</button>
+                </div>
+                : null}
+              {/^\.routes.(get|post|put|patch|delete)\.(\/.+)+\.data/.test(id) ?
+                <div>
+                  <input
+                    data-key={`${name}._${key}.name`}
+                    value={insertData[`_${key}`] ? insertData[`_${key}`].name : ''}
+                    onChange={handleInsertChange}
+                  />
+                  <select
+                    data-key={`${name}._${key}.variant`}
+                    value={insertData[`_${key}`] ? insertData[`_${key}`].variant : ''}
+                    onChange={handleInsertChange}
+                  >
+                    <option value="text">text</option>
+                    <option value="number">number</option>
+                    <option value="boolean">boolean</option>
+                    <option value="object">object</option>
+                    <option value="array">array</option>
+                  </select>
+                  <button onClick={event => insertAPI(event, name, key)}>+</button>
+                </div>
+                : null}
+            </div>
+          </div>
+        )
+      }
+      const configuration = configurations[key]
+      if (!configuration) return null
+      switch (configuration.type) {
+        case 'input':
+          return (
+            <div key={id}>
+              <label htmlFor={id}>{key}</label>
+              <input
+                id={id}
+                data-key={id}
+                data-variant={configuration.variant}
+                value={routes[key]}
+                onChange={handleChange}
+              />
+            </div>
+          )
+        case 'select':
+          return (
+            <div key={id}>
+              <label htmlFor={id}>{key}</label>
+              <select
+                id={id}
+                data-key={id}
+                data-variant={configuration.variant}
+                value={routes[key]}
+                onChange={handleChange}
+              >
+                {configuration.options.map(option => (
+                  <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+          )
+        default:
+          return null
+      }
+    })
+  }
+
+  const routeForm = generateRouteForm(mockServerData, '', mockServerData._configurations$, insertData)
+
   return (
-    <div>
-      <input type="text" data-key="name" value={mockServerData.name} onChange={handleChange} />
-    </div>
+    <form id="form" onSubmit={handleSubmit}>
+      {routeForm}
+      <button type="submit" form="form" value="Submit">Submit</button>
+    </form>
   )
 }
 
