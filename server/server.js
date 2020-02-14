@@ -39,22 +39,23 @@ const basicRequestHandler = fn => (req, res) => {
   }
 }
 
-const createMockServer = (name, data) => {
-  createMockServerFile(name, data)
-  const mockServer = new MockServer(data.routes, data.port)
-  mockServers.set(name, mockServer)
-}
-
-const deleteMockServer = name => {
-  deleteMockServerFile(name)
-  const mockServer = mockServers.get(name)
-  if (mockServer && mockServer.running) mockServer.stop()
-  mockServers.delete(name)
-}
-
 const startServer = mockServers => {
   const app = express()
   const port = 8080
+
+  const createMockServer = (name, data) => {
+    createMockServerFile(name, data)
+    const mockServer = new MockServer(data.routes, data.port)
+    mockServers.set(name, mockServer)
+  }
+
+  const deleteMockServer = name => {
+    deleteMockServerFile(name)
+    const mockServer = mockServers.get(name)
+    if (mockServer && mockServer.running) mockServer.stop()
+    mockServers.delete(name)
+  }
+
 
   app.use(bodyParser.json())
   app.use(express.static(path.join(__dirname, '../build')))

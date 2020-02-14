@@ -20,7 +20,9 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
 
   const toggleMockServer = (event, mockServer, status) => {
     event.preventDefault()
-    axios.patch(`/api/mock_server/${mockServer}/status`, { running: status })
+    axios.patch(`/api/mock_server/${mockServer}/status`, { running: status }).then(() => {
+      alert(`Mock Server - ${mockServer} ${status ? 'Started' : 'Stopped'}`)
+    })
   }
 
   const mockServerItems = mockServers.map((mockServer, i) => (

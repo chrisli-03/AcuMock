@@ -272,7 +272,8 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
 
   const handleSubmit = event => {
     const type = name ? 'put' : 'post'
-    axios[type](`/api/mock_server/${mockServerData.name}`, mockServerData).then(response => {
+    const newName = name || mockServerData.name
+    axios[type](`/api/mock_server/${newName}`, mockServerData).then(response => {
       history.push('/')
     })
     event.preventDefault()

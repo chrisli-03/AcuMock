@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "client": "react-scripts start",
-    "build": "react-scripts build",
+    "build:client": "react-scripts build",
     "eject": "react-scripts eject",
     "server": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
