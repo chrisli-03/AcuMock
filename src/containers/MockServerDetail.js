@@ -7,7 +7,7 @@ import Spinner from '../components/Spinner'
 
 const INIT = 'INIT'
 const UPDATE = 'UPDATE'
-const INSERT = 'INSERT'
+const DELETE = 'DELETE'
 
 const recursiveStateChange = (state, keys, level, value) => {
   return Object.assign({}, state, {
@@ -15,15 +15,22 @@ const recursiveStateChange = (state, keys, level, value) => {
   })
 }
 
+const recursiveDelete = (state, keys) => {
+  const copyState = JSON.parse(JSON.stringify(state))
+  const toDelete = keys.pop()
+  const targetParam = keys.reduce((acc, n) => acc[n], copyState)
+  delete targetParam[toDelete]
+  return copyState
+}
+
 const reducer = (state, action) => {
   switch (action.type) {
     case INIT:
       return action.payload
     case UPDATE:
-      const keys = action.key.split('.')
-      return recursiveStateChange(state, keys, 1, action.payload)
-    case INSERT:
-      return state
+      return recursiveStateChange(state, action.key.split('.').slice(1), 0, action.payload)
+    case DELETE:
+      return recursiveDelete(state, action.key.split('.').slice(1))
     default:
       return state
   }
@@ -154,7 +161,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
       type: UPDATE,
       key: `${name}.${key}.${newAPI}`,
       payload: {
-        "_data": {}
+        "_data": { name: '', variant: '' }
       }
     })
     updateMockServerData({
@@ -234,9 +241,30 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
           key: `${name}._${key}`,
           payload: ''
         })
+        break
       default:
         return
     }
+  }
+
+  const deleteParam = (event, name, key) => {
+    event.preventDefault()
+    updateMockServerData({
+      type: DELETE,
+      key: `${name}.${key}`
+    })
+    updateMockServerData({
+      type: DELETE,
+      key: `._configurations$${name}.${key}`
+    })
+    updateInsertData({
+      type: DELETE,
+      key: `${name}.${key}`
+    })
+    updateInsertData({
+      type: DELETE,
+      key: `${name}._${key}`
+    })
   }
 
   const handleSubmit = event => {
@@ -251,7 +279,13 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
       if (typeof routes[key] === 'object') {
         return (
           <div key={id}>
-            <div>{key}</div>
+            <div>
+              {key}
+              {/^\.routes.(get|post|put|patch|delete)\.(\/.+)+$/.test(id) && !/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.data$/.test(id) ?
+                <button onClick={event => deleteParam(event, name, key)}>x</button>
+                : null
+              }
+            </div>
             <div style={{paddingLeft: '1rem'}}>
               {generateRouteForm(routes[key], id, configurations[key], insertData[key])}
               {/^\.routes.(get|post|put|patch|delete)$/.test(id) ?
@@ -304,6 +338,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                 value={routes[key]}
                 onChange={handleChange}
               />
+              <button onClick={event => deleteParam(event, name, key)}>x</button>
             </div>
           )
         case 'select':
@@ -321,6 +356,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                   <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
                 ))}
               </select>
+              <button onClick={event => deleteParam(event, name, key)}>x</button>
             </div>
           )
         default:
