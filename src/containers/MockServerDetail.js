@@ -1,6 +1,8 @@
 import React, { useReducer, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
+import axios from 'axios'
+
 import { getMockServer } from '../store/mockServer/actions'
 
 import Spinner from '../components/Spinner'
@@ -47,8 +49,8 @@ const defaultMockServer = {
     delete: {}
   },
   _configurations$: {
-    name: '',
-    port: '',
+    name: { type: 'input', variant: 'text' },
+    port: { type: 'input', variant: 'number' },
     routes: {
       get: {},
       post: {},
@@ -71,6 +73,7 @@ const defaultInsertData = {
 
 const MockServerDetail = ({ mockServers, getMockServer }) => {
   const { name } = useParams()
+  const history = useHistory()
   const mockServer = mockServers[name]
   const [mockServerData, updateMockServerData] = useReducer(reducer, defaultMockServer)
   const [insertData, updateInsertData] = useReducer(reducer, defaultInsertData)
@@ -106,7 +109,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
     }
   }, [mockServer])
 
-  if (!mockServer || mockServer.fetching) {
+  if (name && (!mockServer || mockServer.fetching)) {
     return (
       <Spinner />
     )
@@ -268,8 +271,16 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
   }
 
   const handleSubmit = event => {
-    console.log(mockServerData)
+    const type = name ? 'put' : 'post'
+    axios[type](`/api/mock_server/${mockServerData.name}`, mockServerData).then(response => {
+      history.push('/')
+    })
     event.preventDefault()
+  }
+
+  const cancel = event => {
+    event.preventDefault()
+    history.push('/')
   }
 
   const generateRouteForm = (routes, name, configurations, insertData) => {
@@ -280,7 +291,8 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
         return (
           <div key={id}>
             <div>
-              {key}
+              {`${key}: {`}
+              {}
               {/^\.routes.(get|post|put|patch|delete)\.(\/.+)+$/.test(id) && !/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.data$/.test(id) ?
                 <button onClick={event => deleteParam(event, name, key)}>x</button>
                 : null
@@ -321,6 +333,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                 </div>
                 : null}
             </div>
+            {'}'}
           </div>
         )
       }
@@ -330,7 +343,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
         case 'input':
           return (
             <div key={id}>
-              <label htmlFor={id}>{key}</label>
+              <label htmlFor={id}>{key}: </label>
               <input
                 id={id}
                 data-key={id}
@@ -338,13 +351,15 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                 value={routes[key]}
                 onChange={handleChange}
               />
-              <button onClick={event => deleteParam(event, name, key)}>x</button>
+              {(!/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.status$/.test(id) && !/^.(name|port)$/.test(id)) ?
+                <button onClick={event => deleteParam(event, name, key)}>x</button>
+                : null}
             </div>
           )
         case 'select':
           return (
             <div key={id}>
-              <label htmlFor={id}>{key}</label>
+              <label htmlFor={id}>{key}: </label>
               <select
                 id={id}
                 data-key={id}
@@ -356,7 +371,9 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
                   <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
                 ))}
               </select>
-              <button onClick={event => deleteParam(event, name, key)}>x</button>
+              {(!/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.status$/.test(id) && !/^.(name|port)$/.test(id)) ?
+                <button onClick={event => deleteParam(event, name, key)}>x</button>
+                : null}
             </div>
           )
         default:
@@ -371,6 +388,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
     <form id="form" onSubmit={handleSubmit}>
       {routeForm}
       <button type="submit" form="form" value="Submit">Submit</button>
+      <button onClick={cancel}>Cancel</button>
     </form>
   )
 }

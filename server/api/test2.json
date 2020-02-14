@@ -1,13 +1,48 @@
 {
   "name": "test2",
-  "port": 8001,
+  "port": "8001",
   "routes": {
-    "/api/systemMode": {
-      "method": "get",
-      "status": 400,
-      "data": {
-        "systemMode": 1
+    "get": {
+      "/api/systemMode": {
+        "status": "400",
+        "data": {
+          "systemMode": "0"
+        }
       }
+    },
+    "post": {},
+    "put": {},
+    "patch": {},
+    "delete": {}
+  },
+  "_configurations$": {
+    "name": {
+      "type": "input",
+      "variant": "text"
+    },
+    "port": {
+      "type": "input",
+      "variant": "number"
+    },
+    "routes": {
+      "get": {
+        "/api/systemMode": {
+          "status": {
+            "type": "input",
+            "variant": "number"
+          },
+          "data": {
+            "systemMode": {
+              "type": "input",
+              "variant": "text"
+            }
+          }
+        }
+      },
+      "post": {},
+      "put": {},
+      "patch": {},
+      "delete": {}
     }
   }
 }

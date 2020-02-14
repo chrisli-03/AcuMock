@@ -6,11 +6,13 @@ class MockServer {
     this.app = express()
     this.port = port
     this.running = false
-    for (const route in apiData) {
-      const api = apiData[route]
-      this.app[api.method](route, (req, res) => {
-        res.status(api.status).send(api.data)
-      })
+    for (const method in apiData) {
+      for (const route in apiData[method]) {
+        const api = apiData[method][route]
+        this.app[method](route, (req, res) => {
+          res.status(api.status).send(api.data)
+        })
+      }
     }
   }
 

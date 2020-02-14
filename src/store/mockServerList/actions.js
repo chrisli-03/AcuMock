@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const REQUEST_MOCK_SERVER_LIST = 'REQUEST_MOCK_SERVER_LIST'
 export const RECEIVE_MOCK_SERVER_LIST = 'RECEIVE_MOCK_SERVER_LIST'
 
@@ -18,8 +20,8 @@ export function getMockServerList() {
   return (dispatch, getState) => {
     if (getState().mockServerList.fetching) return
     dispatch(requestMockServerList())
-    return setTimeout(() => {
-      dispatch(receivedMockServerList(['mock 1', 'mock 2', 'mock 3']))
-    }, 200)
+    axios.get('/api/mock_server').then(response => {
+      dispatch(receivedMockServerList(response.data))
+    })
   }
 }

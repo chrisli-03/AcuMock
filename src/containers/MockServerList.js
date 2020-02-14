@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import axios from 'axios'
+
 import { getMockServerList } from '../store/mockServerList/actions'
 
 import Spinner from '../components/Spinner'
@@ -16,9 +18,18 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
     )
   }
 
-  const mockServerItems = [...mockServers, 'new'].map((mockServer, i) =>
-    <MockServerLink key={i}>{mockServer}</MockServerLink>
-  )
+  const toggleMockServer = (event, mockServer, status) => {
+    event.preventDefault()
+    axios.patch(`/api/mock_server/${mockServer}/status`, { running: status })
+  }
+
+  const mockServerItems = [...mockServers, 'new'].map((mockServer, i) => (
+    <div>
+      <MockServerLink key={i}>{mockServer}</MockServerLink>
+      <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
+      <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
+    </div>
+  ))
 
   return (
     <div>

@@ -41,7 +41,7 @@ const basicRequestHandler = fn => (req, res) => {
 
 const startServer = mockServers => {
   const app = express()
-  const port = 3000
+  const port = 8080
 
   app.use(bodyParser.json())
   app.use(express.static(path.join(__dirname, '../build')))
@@ -63,6 +63,25 @@ const startServer = mockServers => {
       createMockServerFile(name, data)
       const mockServer = new MockServer(data.routes, data.port)
       mockServers.set(name, mockServer)
+      res.status(200).send()
+    }
+  ))
+
+  app.put('/api/mock_server/:name', [
+      check('name').isLength({ min: 1 }),
+      check('port').exists(),
+      check('routes').exists()
+    ], basicRequestHandler((req, res) => {
+      const data = req.body
+      const name = req.params.name
+      const newName = req.body.name
+      deleteMockServerFile(name)
+      let mockServer = mockServers.get(name)
+      if (mockServer && mockServer.running) mockServer.stop()
+      mockServers.delete(name)
+      createMockServerFile(newName, data)
+      mockServer = new MockServer(data.routes, data.port)
+      mockServers.set(newName, mockServer)
       res.status(200).send()
     }
   ))
