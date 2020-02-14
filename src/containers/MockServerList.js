@@ -23,9 +23,9 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
     axios.patch(`/api/mock_server/${mockServer}/status`, { running: status })
   }
 
-  const mockServerItems = [...mockServers, 'new'].map((mockServer, i) => (
-    <div>
-      <MockServerLink key={i}>{mockServer}</MockServerLink>
+  const mockServerItems = mockServers.map((mockServer, i) => (
+    <div key={i}>
+      <MockServerLink>{mockServer}</MockServerLink>
       <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
       <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
     </div>
@@ -34,6 +34,7 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
   return (
     <div>
       {mockServerItems}
+      <MockServerLink>new</MockServerLink>
     </div>
   )
 }

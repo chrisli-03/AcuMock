@@ -39,6 +39,19 @@ const basicRequestHandler = fn => (req, res) => {
   }
 }
 
+const createMockServer = (name, data) => {
+  createMockServerFile(name, data)
+  const mockServer = new MockServer(data.routes, data.port)
+  mockServers.set(name, mockServer)
+}
+
+const deleteMockServer = name => {
+  deleteMockServerFile(name)
+  const mockServer = mockServers.get(name)
+  if (mockServer && mockServer.running) mockServer.stop()
+  mockServers.delete(name)
+}
+
 const startServer = mockServers => {
   const app = express()
   const port = 8080
@@ -60,9 +73,7 @@ const startServer = mockServers => {
     ], basicRequestHandler((req, res) => {
       const data = req.body
       const name = req.params.name
-      createMockServerFile(name, data)
-      const mockServer = new MockServer(data.routes, data.port)
-      mockServers.set(name, mockServer)
+      createMockServer(name, data)
       res.status(200).send()
     }
   ))
@@ -75,13 +86,8 @@ const startServer = mockServers => {
       const data = req.body
       const name = req.params.name
       const newName = req.body.name
-      deleteMockServerFile(name)
-      let mockServer = mockServers.get(name)
-      if (mockServer && mockServer.running) mockServer.stop()
-      mockServers.delete(name)
-      createMockServerFile(newName, data)
-      mockServer = new MockServer(data.routes, data.port)
-      mockServers.set(newName, mockServer)
+      deleteMockServer(name)
+      createMockServer(newName, data)
       res.status(200).send()
     }
   ))
@@ -101,10 +107,7 @@ const startServer = mockServers => {
 
   app.delete('/api/mock_server/:name', basicRequestHandler((req, res) => {
     const name = req.params.name
-    deleteMockServerFile(name)
-    const mockServer = mockServers.get(name)
-    if (mockServer && mockServer.running) mockServer.stop()
-    mockServers.delete(name)
+    deleteMockServer(name)
     res.status(200).send()
   }))
 
