@@ -25,11 +25,20 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
     })
   }
 
+  const deleteMockServer = (event, mockServer) => {
+    event.preventDefault()
+    axios.delete(`/api/mock_server/${mockServer}`).then(() => {
+      alert(`Mock Server - ${mockServer} deleted`)
+      getMockServers()
+    })
+  }
+
   const mockServerItems = mockServers.map((mockServer, i) => (
     <div key={i}>
       <MockServerLink>{mockServer}</MockServerLink>
       <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
       <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
+      <button onClick={(event => deleteMockServer(event, mockServer))}>delete</button>
     </div>
   ))
 
