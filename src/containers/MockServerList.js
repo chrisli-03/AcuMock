@@ -1,20 +1,33 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { Card, Button, Switch, Popconfirm, Icon } from 'antd'
 
 import { getMockServerList } from '../store/mockServerList/actions'
+import { getMockServerStatus, updateMockServerStatus } from '../store/mockServerStatus/actions'
 
 import Spinner from '../components/Spinner'
 
-const MockServerList = ({ mockServers, fetching, getMockServers }) => {
+const MockServerList = (
+  {
+    mockServers,
+    fetchingMockServers,
+    mockServerStatus,
+    fetchingMockServerStatus,
+    getMockServers,
+    getMockServerStatus,
+    updateMockServerStatus
+  }
+) => {
+  const [updatingMockServerStatus, setUpdatingMockServerStatus] = useState({})
   const history = useHistory()
   useEffect(() => {
     getMockServers()
-  }, [getMockServers])
+    getMockServerStatus()
+  }, [getMockServers, getMockServerStatus])
 
-  if (fetching) {
+  if (fetchingMockServers || fetchingMockServerStatus) {
     return (
       <Spinner />
     )
@@ -25,8 +38,10 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
   }
 
   const toggleMockServer = (mockServer, status) => {
+    setUpdatingMockServerStatus(Object.assign({}, updatingMockServerStatus, { [mockServer]: true }))
     axios.patch(`/api/mock_server/${mockServer}/status`, { running: status }).then(() => {
-
+      updateMockServerStatus(mockServer, status)
+      setUpdatingMockServerStatus(Object.assign({}, updatingMockServerStatus, { [mockServer]: false }))
     })
   }
 
@@ -37,12 +52,6 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
   }
 
   const mockServerItems = mockServers.map((mockServer, i) => (
-    // <div key={i}>
-    //   <MockServerLink>{mockServer}</MockServerLink>
-    //   <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
-    //   <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
-    //   <button onClick={(event => deleteMockServer(event, mockServer))}>delete</button>
-    // </div>
     <Card
       title={mockServer}
       size="small"
@@ -59,7 +68,12 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
           >
             <Button size="small" type="link" style={{ color: '#f00' }}>delete</Button>
           </Popconfirm>
-          <Switch size="small" onChange={event => toggleMockServer(mockServer, event)} />
+          <Switch
+            size="small"
+            onChange={event => toggleMockServer(mockServer, event)}
+            checked={mockServerStatus[mockServer]}
+            disabled={updatingMockServerStatus[mockServer]}
+          />
         </React.Fragment>
       }
       style={{ width: 300 }}
@@ -86,11 +100,15 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
 
 const mapStateToProps = state => ({
   mockServers: state.mockServerList.list,
-  fetching: state.mockServerList.fetching
+  fetchingMockServers: state.mockServerList.fetching,
+  mockServerStatus: state.mockServerStatus.status,
+  fetchingMockServerStatus: state.mockServerStatus.fetching
 })
 
 const mapDispatchToProps = dispatch => ({
-  getMockServers: () => dispatch(getMockServerList())
+  getMockServers: () => dispatch(getMockServerList()),
+  getMockServerStatus: () => dispatch(getMockServerStatus()),
+  updateMockServerStatus: (mockServer, status) => dispatch(updateMockServerStatus(mockServer, status))
 })
 
 export default connect(

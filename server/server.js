@@ -66,6 +66,13 @@ const startServer = mockServers => {
   app.get('/api/mock_server/:name', basicRequestHandler((req, res) => {
     res.status(200).send(readMockServerFile(req.params.name))
   }))
+  app.get('/api/mock_server_status', basicRequestHandler((req, res) => {
+    const status = {}
+    for (const [key, value] of mockServers.entries()) {
+      status[key] = value.running
+    }
+    res.status(200).send(status)
+  }))
 
   app.post('/api/mock_server/:name', [
       check('name').isLength({ min: 1 }),

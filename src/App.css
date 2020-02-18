@@ -25,6 +25,7 @@
   color: #52c41a;
   background-color: #fff;
   transition: color 0.4s, background-color 0.4s;
+  border-radius: 0;
 }
 
 .new-mock-server .ant-btn:hover {
