@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import axios from 'axios'
-import { Card, Button, Switch, Popover, Popconfirm, Icon } from 'antd'
+import { Button, Icon } from 'antd'
 
 import { getMockServerList } from '../store/mockServerList/actions'
 import { getMockServerStatus } from '../store/mockServerStatus/actions'
