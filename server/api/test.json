@@ -1,30 +1,8 @@
 {
   "name": "test",
-  "port": 8000,
+  "port": "8000",
   "routes": {
-    "get": {
-      "/api/systemMode": {
-        "status": 200,
-        "data": {
-          "systemMode": 1
-        }
-      },
-      "/api/authenticate": {
-        "status": 200,
-        "data": {
-          "user": "admin",
-          "a": {
-            "a": {
-              "a": {
-                "a": {
-                  "a": "1"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
+    "get": {},
     "post": {},
     "put": {},
     "patch": {},
@@ -40,44 +18,7 @@
       "variant": "number"
     },
     "routes": {
-      "get": {
-        "/api/systemMode": {
-          "status": {
-            "type": "input",
-            "variant": "number"
-          },
-          "data": {
-            "systemMode": {
-              "type": "input",
-              "variant": "number"
-            }
-          }
-        },
-        "/api/authenticate": {
-          "status": {
-            "type": "input",
-            "variant": "number"
-          },
-          "data": {
-            "user": {
-              "type": "input",
-              "variant": "text"
-            },
-            "a": {
-              "a": {
-                "a": {
-                  "a": {
-                    "a": {
-                      "type": "input",
-                      "variant": "text"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
+      "get": {},
       "post": {},
       "put": {},
       "patch": {},

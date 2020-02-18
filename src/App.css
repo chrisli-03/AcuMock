@@ -10,3 +10,24 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.mock-server-list {
+  display: flex;
+}
+
+.mock-server-list .ant-card {
+  margin: 0.5rem;
+}
+
+.new-mock-server .ant-btn {
+  height: 100%;
+  width: 100%;
+  color: #52c41a;
+  background-color: #fff;
+  transition: color 0.4s, background-color 0.4s;
+}
+
+.new-mock-server .ant-btn:hover {
+  color: #fff;
+  background-color: #52c41a;
+}

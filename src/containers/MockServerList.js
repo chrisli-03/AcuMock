@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import { Card, Button, Switch, Popconfirm, Icon } from 'antd'
 
 import { getMockServerList } from '../store/mockServerList/actions'
 
 import Spinner from '../components/Spinner'
-import MockServerLink from '../components/MockServerLink'
 
 const MockServerList = ({ mockServers, fetching, getMockServers }) => {
+  const history = useHistory()
   useEffect(() => {
     getMockServers()
   }, [getMockServers])
@@ -18,34 +20,66 @@ const MockServerList = ({ mockServers, fetching, getMockServers }) => {
     )
   }
 
-  const toggleMockServer = (event, mockServer, status) => {
-    event.preventDefault()
+  const redirectTo = route => {
+    history.push(route)
+  }
+
+  const toggleMockServer = (mockServer, status) => {
     axios.patch(`/api/mock_server/${mockServer}/status`, { running: status }).then(() => {
-      alert(`Mock Server - ${mockServer} ${status ? 'Started' : 'Stopped'}`)
+
     })
   }
 
-  const deleteMockServer = (event, mockServer) => {
-    event.preventDefault()
+  const deleteMockServer = mockServer => {
     axios.delete(`/api/mock_server/${mockServer}`).then(() => {
-      alert(`Mock Server - ${mockServer} deleted`)
       getMockServers()
     })
   }
 
   const mockServerItems = mockServers.map((mockServer, i) => (
-    <div key={i}>
-      <MockServerLink>{mockServer}</MockServerLink>
-      <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
-      <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
-      <button onClick={(event => deleteMockServer(event, mockServer))}>delete</button>
-    </div>
+    // <div key={i}>
+    //   <MockServerLink>{mockServer}</MockServerLink>
+    //   <button onClick={(event => toggleMockServer(event, mockServer, true))}>start</button>
+    //   <button onClick={(event => toggleMockServer(event, mockServer, false))}>stop</button>
+    //   <button onClick={(event => deleteMockServer(event, mockServer))}>delete</button>
+    // </div>
+    <Card
+      title={mockServer}
+      size="small"
+      key={i}
+      extra={
+        <React.Fragment>
+          <Button size="small" type="link" onClick={() => redirectTo(`/mock_server/${mockServer}`)}>edit</Button>
+          <Popconfirm
+            title="Are you sure delete this mock server?"
+            onConfirm={() => deleteMockServer(mockServer)}
+            okText="Yes"
+            cancelText="No"
+            icon={<Icon type="exclamation-circle" style={{ color: 'red' }} />}
+          >
+            <Button size="small" type="link" style={{ color: '#f00' }}>delete</Button>
+          </Popconfirm>
+          <Switch size="small" onChange={event => toggleMockServer(mockServer, event)} />
+        </React.Fragment>
+      }
+      style={{ width: 300 }}
+    >
+      Discription Placeholder
+    </Card>
   ))
 
   return (
-    <div>
+    <div className="mock-server-list">
       {mockServerItems}
-      <MockServerLink>new</MockServerLink>
+      <div className="new-mock-server ant-card ant-card-bordered ant-card-small" style={{ width: 300 }} >
+        <Button
+          size="small"
+          type="link"
+          onClick={() => redirectTo('/mock_server/new')}
+        >
+          <Icon type="plus" />
+        </Button>
+      </div>
     </div>
   )
 }

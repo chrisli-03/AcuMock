@@ -49,7 +49,9 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "api/*.json"
+      "api/*.json",
+      "src/",
+      "build/"
     ]
   }
 }
