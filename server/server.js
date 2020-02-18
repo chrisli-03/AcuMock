@@ -7,16 +7,16 @@ const { check, validationResult } = require('express-validator')
 const MockServer = require('./MockServer')
 const { readMockServerFile, createMockServerFile, deleteMockServerFile } = require('./fileHandler')
 
-const basicRequestHandler = fn => (req, res) => {
+const basicRequestHandler = fn => async (req, res) => {
   try {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       throw {
-        message: 'Validation Error',
+        message: 'Validation Error.',
         errors: errors.array()
       }
     }
-    fn(req, res)
+    await fn(req, res)
   } catch(e) {
     console.log(e)
     switch (e.message) {
@@ -27,10 +27,11 @@ const basicRequestHandler = fn => (req, res) => {
       case 'Mock Server Does Not Exist.':
         res.status(404).send(e.message)
         break
-      case 'Server Exists':
+      case 'Server Exists.':
+      case 'Port Already In Use.':
         res.status(409).send(e.message)
         break
-      case 'Validation Error':
+      case 'Validation Error.':
         res.status(422).send(e.errors)
         break
       default:
@@ -102,14 +103,17 @@ const startServer = mockServers => {
 
   app.patch('/api/mock_server/:name/status', [
       check('running').exists()
-    ], basicRequestHandler((req, res) => {
+    ], basicRequestHandler(async (req, res) => {
       const server = mockServers.get(req.params.name)
       if (!server) {
         res.status(404).send('Mock Server Not Found.')
         return
       }
-      server[req.body.running ? 'start' : 'stop']()
-      res.status(200).send()
+      await server[req.body.running ? 'start' : 'stop']().then(() => {
+        res.status(200).send()
+      }).catch(e => {
+        throw e
+      })
     }
   ))
 
