@@ -2,10 +2,12 @@ import React, { useReducer, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
 import axios from 'axios'
+import { Form, Input, Button } from 'antd'
 
 import { getMockServer } from '../store/mockServer/actions'
 
 import Spinner from '../components/Spinner'
+import APITree from '../components/APITree'
 
 const INIT = 'INIT'
 const UPDATE = 'UPDATE'
@@ -71,7 +73,7 @@ const defaultInsertData = {
   }
 }
 
-const MockServerDetail = ({ mockServers, getMockServer }) => {
+const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockServer }) => {
   const { name } = useParams()
   const history = useHistory()
   const mockServer = mockServers[name]
@@ -285,112 +287,37 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
   }
 
   const generateRouteForm = (routes, name, configurations, insertData) => {
-    return Object.keys(routes).filter(route => route !== '_configurations$').map(key => {
-      const id = `${name}.${key}`
-      if (Array.isArray(routes[key])) return []
-      if (typeof routes[key] === 'object') {
-        return (
-          <div key={id}>
-            <div>
-              {`${key}: {`}
-              {}
-              {/^\.routes.(get|post|put|patch|delete)\.(\/.+)+$/.test(id) && !/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.data$/.test(id) ?
-                <button onClick={event => deleteParam(event, name, key)}>x</button>
-                : null
-              }
-            </div>
-            <div style={{paddingLeft: '1rem'}}>
-              {generateRouteForm(routes[key], id, configurations[key], insertData[key])}
-              {/^\.routes.(get|post|put|patch|delete)$/.test(id) ?
-                <div>
-                  <input
-                    data-key={`${name}._${key}.name`}
-                    value={insertData[`_${key}`] ? insertData[`_${key}`].name : ''}
-                    onChange={handleInsertChange}
-                  />
-                  <button onClick={event => insertAPI(event, name, key)}>+</button>
-                </div>
-                : null}
-              {/^\.routes.(get|post|put|patch|delete)\.(\/.+)+\.data/.test(id) ?
-                <div>
-                  <input
-                    data-key={`${name}._${key}.name`}
-                    value={insertData[`_${key}`] ? insertData[`_${key}`].name : ''}
-                    onChange={handleInsertChange}
-                  />
-                  <select
-                    data-key={`${name}._${key}.variant`}
-                    value={insertData[`_${key}`] ? insertData[`_${key}`].variant : ''}
-                    onChange={handleInsertChange}
-                  >
-                    <option value="" disabled>--select--</option>
-                    <option value="text">text</option>
-                    <option value="number">number</option>
-                    <option value="boolean">boolean</option>
-                    <option value="object">object</option>
-                    <option value="array">array</option>
-                  </select>
-                  <button onClick={event => insertParam(event, name, key)}>+</button>
-                </div>
-                : null}
-            </div>
-            {'}'}
-          </div>
-        )
-      }
-      const configuration = configurations[key]
-      if (!configuration) return null
-      switch (configuration.type) {
-        case 'input':
-          return (
-            <div key={id}>
-              <label htmlFor={id}>{key}: </label>
-              <input
-                id={id}
-                data-key={id}
-                data-variant={configuration.variant}
-                value={routes[key]}
-                onChange={handleChange}
-              />
-              {(!/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.status$/.test(id) && !/^.(name|port)$/.test(id)) ?
-                <button onClick={event => deleteParam(event, name, key)}>x</button>
-                : null}
-            </div>
-          )
-        case 'select':
-          return (
-            <div key={id}>
-              <label htmlFor={id}>{key}: </label>
-              <select
-                id={id}
-                data-key={id}
-                data-variant={configuration.variant}
-                value={routes[key]}
-                onChange={handleChange}
-              >
-                {configuration.options.map(option => (
-                  <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
-                ))}
-              </select>
-              {(!/^\.routes.(get|post|put|patch|delete)\.(\/.+)+.status$/.test(id) && !/^.(name|port)$/.test(id)) ?
-                <button onClick={event => deleteParam(event, name, key)}>x</button>
-                : null}
-            </div>
-          )
-        default:
-          return null
-      }
+    return Object.keys(routes.routes).map(type => {
+      return <div key={type}>
+        {type}
+        {
+          Object.keys(routes.routes[type]).map(api => {
+            return <APITree
+              prefix={`.routes.${type}`}
+              api={api}
+              routes={routes.routes[type][api]}
+              configurations={configurations.routes[type][api]}
+              insertData={insertData.routes[type][api]}
+              insertParam={insertParam}
+              handleChange={handleChange}
+              handleInsertChange={handleInsertChange}
+              deleteParam={deleteParam}
+              key={api}
+            />
+          })
+        }
+      </div>
     })
   }
 
   const routeForm = generateRouteForm(mockServerData, '', mockServerData._configurations$, insertData)
 
   return (
-    <form id="form" onSubmit={handleSubmit}>
+    <Form id="form" onSubmit={handleSubmit}>
       {routeForm}
-      <button type="submit" form="form" value="Submit">Submit</button>
-      <button onClick={cancel}>Cancel</button>
-    </form>
+      <Button htmlType="submit" value="Submit">Submit</Button>
+      <Button onClick={cancel}>Cancel</Button>
+    </Form>
   )
 }
 
@@ -405,4 +332,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MockServerDetail)
+)(Form.create({ name: 'mock_server' })(MockServerDetail))
