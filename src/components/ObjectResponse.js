@@ -17,40 +17,17 @@ const ObjectResponse = ({
     if (typeof routes[key] === 'object') {
       return (
         <div key={id}>
-          <div style={{paddingLeft: '1rem'}}>
-            <ObjectResponse
-              prefix={`${prefix}.${api}`}
-              api={key}
-              routes={routes[key]}
-              configurations={configurations[key]}
-              insertData={insertData[key]}
-              insertParam={insertParam}
-              handleChange={handleChange}
-              handleInsertChange={handleInsertChange}
-              deleteParam={deleteParam}
-            />
-            <div>
-              <input
-                data-key={`${prefix}.${api}._${key}.name`}
-                value={insertData[`_${key}`] ? insertData[`_${key}`].name : ''}
-                onChange={handleInsertChange}
-              />
-              <select
-                data-key={`${prefix}.${api}._${key}.variant`}
-                value={insertData[`_${key}`] ? insertData[`_${key}`].variant : ''}
-                onChange={handleInsertChange}
-              >
-                <option value="" disabled>--select--</option>
-                <option value="text">text</option>
-                <option value="number">number</option>
-                <option value="boolean">boolean</option>
-                <option value="object">object</option>
-                <option value="array">array</option>
-              </select>
-              <button onClick={event => insertParam(event, prefix, key)}>+</button>
-            </div>
-          </div>
-          {'}'}
+          <ObjectResponse
+            prefix={`${prefix}.${api}`}
+            api={key}
+            routes={routes[key]}
+            configurations={configurations[key]}
+            insertData={insertData[api]}
+            insertParam={insertParam}
+            handleChange={handleChange}
+            handleInsertChange={handleInsertChange}
+            deleteParam={deleteParam}
+          />
         </div>
       )
     }
@@ -94,15 +71,38 @@ const ObjectResponse = ({
     }
   })
   return <div>
-    {
-      api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
+    <div>
+      {api}: {'{'}
+      {
+        api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
+        <button onClick={event => deleteParam(event, prefix, api)}>x</button> :
+        null
+      }
+    </div>
+    <div style={{paddingLeft: '1rem'}}>
+      {obj}
       <div>
-        {api}: {'{'}
-        <button onClick={event => deleteParam(event, prefix, api)}>x</button>
-      </div> :
-      null
-    }
-    <div style={{paddingLeft: '1rem'}}>{obj}</div>
+        <input
+          data-key={`${prefix}._${api}.name`}
+          value={insertData[`_${api}`] ? insertData[`_${api}`].name : ''}
+          onChange={handleInsertChange}
+        />
+        <select
+          data-key={`${prefix}._${api}.variant`}
+          value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
+          onChange={handleInsertChange}
+        >
+          <option value="" disabled>--select--</option>
+          <option value="text">text</option>
+          <option value="number">number</option>
+          <option value="boolean">boolean</option>
+          <option value="object">object</option>
+          <option value="array">array</option>
+        </select>
+        <button onClick={event => insertParam(event, prefix, api)}>+</button>
+      </div>
+    </div>
+    <div>{'}'}</div>
   </div>
 }
 

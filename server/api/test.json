@@ -14,8 +14,22 @@
               "test": "2",
               "test2": {
                 "test3": {
-                  "aa": "1"
+                  "11": "a",
+                  "aa": "1",
+                  "bb": "2",
+                  "ab": "3",
+                  "bdaf": {
+                    "adf": {
+                      "a": "1"
+                    },
+                    "aa": {
+                      "adf": "1"
+                    }
+                  }
                 }
+              },
+              "asgasf": {
+                "asdfas": "1"
               }
             }
           }
@@ -64,10 +78,42 @@
                 },
                 "test2": {
                   "test3": {
+                    "11": {
+                      "type": "input",
+                      "variant": "text"
+                    },
                     "aa": {
                       "type": "input",
                       "variant": "text"
+                    },
+                    "bb": {
+                      "type": "input",
+                      "variant": "text"
+                    },
+                    "ab": {
+                      "type": "input",
+                      "variant": "text"
+                    },
+                    "bdaf": {
+                      "adf": {
+                        "a": {
+                          "type": "input",
+                          "variant": "number"
+                        }
+                      },
+                      "aa": {
+                        "adf": {
+                          "type": "input",
+                          "variant": "number"
+                        }
+                      }
                     }
+                  }
+                },
+                "asgasf": {
+                  "asdfas": {
+                    "type": "input",
+                    "variant": "text"
                   }
                 }
               }

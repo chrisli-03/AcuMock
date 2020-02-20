@@ -307,6 +307,14 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
               />
             })
           }
+          <div>
+            <input
+              data-key={`.routes._${type}.name`}
+              value={insertData.routes[`_${type}`] ? insertData.routes[`_${type}`].name : ''}
+              onChange={handleInsertChange}
+            />
+            <button onClick={event => insertAPI(event, '.routes', type)}>+</button>
+          </div>
         </div>
         {'}'}
       </div>
