@@ -2,7 +2,26 @@
   "name": "test",
   "port": "8000",
   "routes": {
-    "get": {},
+    "get": {
+      "/test": {
+        "status": 200,
+        "data": {
+          "a": "1",
+          "b": {
+            "c": {
+              "d": "12",
+              "asdf": "3",
+              "test": "2",
+              "test2": {
+                "test3": {
+                  "aa": "1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "post": {},
     "put": {},
     "patch": {},
@@ -18,7 +37,44 @@
       "variant": "number"
     },
     "routes": {
-      "get": {},
+      "get": {
+        "/test": {
+          "status": {
+            "type": "input",
+            "variant": "number"
+          },
+          "data": {
+            "a": {
+              "type": "input",
+              "variant": "text"
+            },
+            "b": {
+              "c": {
+                "d": {
+                  "type": "input",
+                  "variant": "text"
+                },
+                "asdf": {
+                  "type": "input",
+                  "variant": "text"
+                },
+                "test": {
+                  "type": "input",
+                  "variant": "boolean"
+                },
+                "test2": {
+                  "test3": {
+                    "aa": {
+                      "type": "input",
+                      "variant": "text"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {},
       "put": {},
       "patch": {},

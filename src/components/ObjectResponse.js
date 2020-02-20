@@ -97,12 +97,12 @@ const ObjectResponse = ({
     {
       api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
       <div>
-        {api}
+        {api}: {'{'}
         <button onClick={event => deleteParam(event, prefix, api)}>x</button>
       </div> :
       null
     }
-    <div>{obj}</div>
+    <div style={{paddingLeft: '1rem'}}>{obj}</div>
   </div>
 }
 
