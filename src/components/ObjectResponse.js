@@ -47,6 +47,7 @@ const ObjectResponse = ({
               data-variant={configuration.variant}
               value={routes[key]}
               onChange={handleChange}
+              addonBefore={configuration.variant}
             />
             <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}}>Delete Key</Button>
           </div>
@@ -73,6 +74,18 @@ const ObjectResponse = ({
         return null
     }
   })
+  const selectType = <Select
+    data-key={`${prefix}._${api}.variant`}
+    value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
+    onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}._${api}.variant` } }, preventDefault: () => {} }) }
+  >
+    <Option value="" disabled>--Select Value Type--</Option>
+    <Option value="text">text</Option>
+    <Option value="number">number</Option>
+    <Option value="boolean">boolean</Option>
+    <Option value="object">object</Option>
+    <Option value="array">array</Option>
+  </Select>
   return <div>
     <div>
       {api}
@@ -90,19 +103,8 @@ const ObjectResponse = ({
           value={insertData[`_${api}`] ? insertData[`_${api}`].name : ''}
           onChange={handleInsertChange}
           placeholder="New Key"
+          addonBefore={selectType}
         />
-        <Select
-          data-key={`${prefix}._${api}.variant`}
-          value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
-          onChange={handleInsertChange}
-        >
-          <Option value="" disabled>--Select Value Type--</Option>
-          <Option value="text">text</Option>
-          <Option value="number">number</Option>
-          <Option value="boolean">boolean</Option>
-          <Option value="object">object</Option>
-          <Option value="array">array</Option>
-        </Select>
         <Button type="link" onClick={event => insertParam(event, prefix, api)} style={{color: '#52c41a'}}>Add Key</Button>
       </div>
     </div>

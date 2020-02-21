@@ -33,6 +33,10 @@
   background-color: #52c41a;
 }
 
-.ant-input, .ant-select {
+.ant-input {
   width: 200px !important;
+}
+
+.ant-input-group-wrapper {
+  width: unset !important;
 }

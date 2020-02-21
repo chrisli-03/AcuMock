@@ -348,7 +348,7 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
         </div>
       </div>
       {routeForm}
-      <Button type="primary" htmlType="submit" value="Submit">Submit</Button>
+      <Button type="primary" htmlType="submit" value="Submit" style={{marginRight: '0.5rem'}}>Submit</Button>
       <Button onClick={cancel}>Cancel</Button>
     </Form>
   )

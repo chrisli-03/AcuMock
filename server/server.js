@@ -42,7 +42,7 @@ const basicRequestHandler = fn => async (req, res) => {
 
 const startServer = mockServers => {
   const app = express()
-  const port = 8080
+  const port = 80
 
   const createMockServer = (name, data) => {
     createMockServerFile(name, data)
