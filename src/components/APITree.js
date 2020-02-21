@@ -1,4 +1,5 @@
 import React from 'react'
+import { Input, Button } from 'antd'
 
 import ObjectResponse from './ObjectResponse'
 
@@ -13,11 +14,11 @@ const APITree = ({
   handleInsertChange,
   deleteParam
 }) => {
-  return <div>
-    <div>{api}: {'{'}</div>
-    <div style={{paddingLeft: '1rem'}}>
+  return <div style={{marginBottom: '0.5rem'}}>
+    <div>{api} <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete API</Button></div>
+    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
       <label htmlFor={`${prefix}.${api}.status`}>status: </label>
-      <input
+      <Input
         id={`${prefix}.${api}.status`}
         data-key={`${prefix}.${api}.status`}
         data-variant={configurations.status.variant}
@@ -36,7 +37,6 @@ const APITree = ({
         deleteParam={deleteParam}
       />
     </div>
-    <div>{'}'}</div>
   </div>
 }
 

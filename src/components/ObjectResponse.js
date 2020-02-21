@@ -1,4 +1,7 @@
 import React from 'react'
+import { Input, Select, Button } from 'antd'
+
+const { Option } = Select
 
 const ObjectResponse = ({
   prefix,
@@ -36,73 +39,73 @@ const ObjectResponse = ({
     switch (configuration.type) {
       case 'input':
         return (
-          <div key={id}>
+          <div key={id} style={{marginBottom: '0.5rem'}}>
             <label htmlFor={id}>{key}: </label>
-            <input
+            <Input
               id={id}
               data-key={id}
               data-variant={configuration.variant}
               value={routes[key]}
               onChange={handleChange}
             />
-            <button onClick={event => deleteParam(event, `${prefix}.${api}`, key)}>x</button>
+            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}}>Delete Key</Button>
           </div>
         )
-      case 'select':
-        return (
-          <div key={id}>
-            <label htmlFor={id}>{key}: </label>
-            <select
-              id={id}
-              data-key={id}
-              data-variant={configuration.variant}
-              value={routes[key]}
-              onChange={handleChange}
-            >
-              {configuration.options.map(option => (
-                <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
-              ))}
-            </select>
-            <button onClick={event => deleteParam(event, prefix, key)}>x</button>
-          </div>
-        )
+      // case 'select':
+      //   return (
+      //     <div key={id}>
+      //       <label htmlFor={id}>{key}: </label>
+      //       <select
+      //         id={id}
+      //         data-key={id}
+      //         data-variant={configuration.variant}
+      //         value={routes[key]}
+      //         onChange={handleChange}
+      //       >
+      //         {configuration.options.map(option => (
+      //           <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
+      //         ))}
+      //       </select>
+      //       <button onClick={event => deleteParam(event, prefix, key)}>x</button>
+      //     </div>
+      //   )
       default:
         return null
     }
   })
   return <div>
     <div>
-      {api}: {'{'}
+      {api}
       {
         api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
-        <button onClick={event => deleteParam(event, prefix, api)}>x</button> :
+        <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete Key</Button> :
         null
       }
     </div>
-    <div style={{paddingLeft: '1rem'}}>
+    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
       {obj}
-      <div>
-        <input
+      <div style={{marginBottom: '0.5rem'}}>
+        <Input
           data-key={`${prefix}._${api}.name`}
           value={insertData[`_${api}`] ? insertData[`_${api}`].name : ''}
           onChange={handleInsertChange}
+          placeholder="New Key"
         />
-        <select
+        <Select
           data-key={`${prefix}._${api}.variant`}
           value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
           onChange={handleInsertChange}
         >
-          <option value="" disabled>--select--</option>
-          <option value="text">text</option>
-          <option value="number">number</option>
-          <option value="boolean">boolean</option>
-          <option value="object">object</option>
-          <option value="array">array</option>
-        </select>
-        <button onClick={event => insertParam(event, prefix, api)}>+</button>
+          <Option value="" disabled>--Select Value Type--</Option>
+          <Option value="text">text</Option>
+          <Option value="number">number</Option>
+          <Option value="boolean">boolean</Option>
+          <Option value="object">object</Option>
+          <Option value="array">array</Option>
+        </Select>
+        <Button type="link" onClick={event => insertParam(event, prefix, api)} style={{color: '#52c41a'}}>Add Key</Button>
       </div>
     </div>
-    <div>{'}'}</div>
   </div>
 }
 

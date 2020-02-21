@@ -288,9 +288,9 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
 
   const generateRouteForm = (routes, name, configurations, insertData) => {
     return Object.keys(routes.routes).map(type => {
-      return <div key={type}>
-        {type}: {'{'}
-        <div style={{paddingLeft: '1rem'}}>
+      return <div key={type} style={{marginBottom: '0.5rem'}}>
+        <h4>{type.toUpperCase()} Requests</h4>
+        <div style={{marginLeft: '1rem'}}>
           {
             Object.keys(routes.routes[type]).map(api => {
               return <APITree
@@ -308,15 +308,15 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
             })
           }
           <div>
-            <input
+            <Input
               data-key={`.routes._${type}.name`}
               value={insertData.routes[`_${type}`] ? insertData.routes[`_${type}`].name : ''}
               onChange={handleInsertChange}
+              placeholder="New API"
             />
-            <button onClick={event => insertAPI(event, '.routes', type)}>+</button>
+            <Button type="link" onClick={event => insertAPI(event, '.routes', type)} style={{color: '#52c41a'}}>Add API</Button>
           </div>
         </div>
-        {'}'}
       </div>
     })
   }
@@ -324,33 +324,31 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
   const routeForm = generateRouteForm(mockServerData, '', mockServerData._configurations$, insertData)
 
   return (
-    <Form id="form" onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">name: </label>
-        <input
-          id="name"
-          data-key=".name"
-          data-variant={mockServerData._configurations$.name.variant}
-          value={mockServerData.name}
-          onChange={handleChange}
-        />
+    <Form id="form" onSubmit={handleSubmit} style={{padding: '0.5rem'}}>
+      <div style={{marginBottom: '0.5rem'}}>
+        <div style={{marginBottom:'0.5rem'}}>
+          <label htmlFor="name">Name: </label>
+          <Input
+            id="name"
+            data-key=".name"
+            data-variant={mockServerData._configurations$.name.variant}
+            value={mockServerData.name}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="port">Port: </label>
+          <Input
+            id="port"
+            data-key=".port"
+            data-variant={mockServerData._configurations$.port.variant}
+            value={mockServerData.port}
+            onChange={handleChange}
+          />
+        </div>
       </div>
-      <div>
-        <label htmlFor="port">port: </label>
-        <input
-          id="port"
-          data-key=".port"
-          data-variant={mockServerData._configurations$.port.variant}
-          value={mockServerData.port}
-          onChange={handleChange}
-        />
-      </div>
-      <div>routes: {'{'}</div>
-      <div style={{paddingLeft: '1rem'}}>
-        {routeForm}
-      </div>
-      <div>{'}'}</div>
-      <Button htmlType="submit" value="Submit">Submit</Button>
+      {routeForm}
+      <Button type="primary" htmlType="submit" value="Submit">Submit</Button>
       <Button onClick={cancel}>Cancel</Button>
     </Form>
   )
