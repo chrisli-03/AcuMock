@@ -104,5 +104,4 @@ dist
 .tern-port
 
 build/
-server/api
-server/api/*.json
+*.json
