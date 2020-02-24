@@ -38,6 +38,7 @@ const ResponseObject = ({
     if (!configuration) return null
     switch (configuration.variant) {
       case 'text':
+      case 'number':
         return (
           <div key={id} style={{marginBottom: '0.5rem'}}>
             <label htmlFor={id}>{key}: </label>

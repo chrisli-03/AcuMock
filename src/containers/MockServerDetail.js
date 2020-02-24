@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Form, Input, Button } from 'antd'
 
 import { getMockServer } from '../store/mockServer/actions'
+import { createAlert } from '../store/alert/actions'
 
 import Spinner from '../components/Spinner'
 import APITree from '../components/APITree'
@@ -73,7 +74,7 @@ const defaultInsertData = {
   }
 }
 
-const MockServerDetail = ({ mockServers, getMockServer }) => {
+const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
   const { name } = useParams()
   const history = useHistory()
   const mockServer = mockServers[name]
@@ -293,6 +294,7 @@ const MockServerDetail = ({ mockServers, getMockServer }) => {
     const newName = name || mockServerData.name
     axios[type](`/api/mock_server/${newName}`, mockServerData).then(response => {
       history.push('/')
+      createAlert('Saved successfully', 'success')
     })
     event.preventDefault()
   }
@@ -375,7 +377,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getMockServer: name => dispatch(getMockServer(name))
+  getMockServer: name => dispatch(getMockServer(name)),
+  createAlert: (message, type) => dispatch(createAlert(message, type))
 })
 
 export default connect(
