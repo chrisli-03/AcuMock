@@ -73,7 +73,7 @@ const defaultInsertData = {
   }
 }
 
-const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockServer }) => {
+const MockServerDetail = ({ mockServers, getMockServer }) => {
   const { name } = useParams()
   const history = useHistory()
   const mockServer = mockServers[name]
@@ -118,10 +118,26 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
   }
 
   const handleChange = event => {
+    let value = event.target.value
+    if (!event.target.dataset) {
+      event.target.dataset = {
+        key: event.target['data-key'],
+        variant: event.target['data-variant']
+      }
+    }
+    switch(event.target.dataset.variant) {
+      case 'number':
+        value = Number(value)
+        break
+      case 'boolean':
+        break
+      case 'string':
+      default:
+    }
     updateMockServerData({
       type: UPDATE,
       key: event.target.dataset.key,
-      payload: event.target.value
+      payload: value
     })
     event.preventDefault()
   }
@@ -204,8 +220,8 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
           type: UPDATE,
           key: `._configurations$${name}.${key}.${newParam}`,
           payload: {
-            "type": "input",
-            "variant": variant
+            type: 'input',
+            variant
           }
         })
         updateMockServerData({

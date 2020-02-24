@@ -1,9 +1,9 @@
 import React from 'react'
-import { Input, Select, Button } from 'antd'
+import { Input, Select, Radio, Button } from 'antd'
 
 const { Option } = Select
 
-const ObjectResponse = ({
+const ResponseObject = ({
   prefix,
   api,
   routes,
@@ -20,7 +20,7 @@ const ObjectResponse = ({
     if (typeof routes[key] === 'object') {
       return (
         <div key={id}>
-          <ObjectResponse
+          <ResponseObject
             prefix={`${prefix}.${api}`}
             api={key}
             routes={routes[key]}
@@ -36,8 +36,8 @@ const ObjectResponse = ({
     }
     const configuration = configurations[key]
     if (!configuration) return null
-    switch (configuration.type) {
-      case 'input':
+    switch (configuration.variant) {
+      case 'text':
         return (
           <div key={id} style={{marginBottom: '0.5rem'}}>
             <label htmlFor={id}>{key}: </label>
@@ -49,6 +49,21 @@ const ObjectResponse = ({
               onChange={handleChange}
               addonBefore={configuration.variant}
             />
+            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}}>Delete Key</Button>
+          </div>
+        )
+      case 'boolean':
+        return (
+          <div key={id} style={{marginBottom: '0.5rem'}}>
+            <label htmlFor={id}>{key}: </label>
+            <Radio.Group
+              id={id}
+              onChange={handleChange}
+              value={routes[key]}
+            >
+              <Radio value={true} data-variant={configuration.variant} data-key={id}>True</Radio>
+              <Radio value={false} data-variant={configuration.variant} data-key={id}>False</Radio>
+            </Radio.Group>
             <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}}>Delete Key</Button>
           </div>
         )
@@ -111,4 +126,4 @@ const ObjectResponse = ({
   </div>
 }
 
-export default ObjectResponse
+export default ResponseObject
