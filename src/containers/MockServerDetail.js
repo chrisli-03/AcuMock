@@ -15,9 +15,22 @@ const UPDATE = 'UPDATE'
 const DELETE = 'DELETE'
 
 const recursiveStateChange = (state, keys, level, value) => {
-  return Object.assign({}, state, {
-    [keys[level]]: level < keys.length-1 ? recursiveStateChange(state[keys[level]], keys, level+1, value) : value
+  if (level === keys.length-1) return Object.assign({}, state, {
+    [keys[level]]: value
   })
+  else if (level > keys.length-1) return value
+  if (Array.isArray(state[keys[level]])) {
+    const arr = state[keys[level]].slice()
+    arr[keys[level+1]] = recursiveStateChange(state[keys[level]][keys[level+1]], keys, level+2, value)
+    return Object.assign({}, state, {
+      [keys[level]]: arr
+    })
+  }
+  else {
+    return Object.assign({}, state, {
+      [keys[level]]: recursiveStateChange(state[keys[level]], keys, level+1, value)
+    })
+  }
 }
 
 const recursiveDelete = (state, keys) => {
@@ -201,7 +214,7 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
     })
   }
 
-  const insertParam = (event, name, key) => {
+  const insertParam = (event, name, key, index) => {
     event.preventDefault()
     const { name: newParam, variant } = [...name.substring(1).split('.'), `_${key}`].reduce((acc, n) => acc[n], insertData)
     if (!variant) {
@@ -219,7 +232,7 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
       case 'boolean':
         updateMockServerData({
           type: UPDATE,
-          key: `._configurations$${name}.${key}.${newParam}`,
+          key: `._configurations$${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
           payload: {
             type: 'input',
             variant
@@ -227,40 +240,66 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
         })
         updateMockServerData({
           type: UPDATE,
-          key: `${name}.${key}.${newParam}`,
+          key: `${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
           payload: ''
         })
         updateInsertData({
           type: UPDATE,
-          key: `${name}._${key}`,
+          key: `${name}._${typeof index !== 'undefined' ? index : key}`,
           payload: ''
         })
         break
       case 'object':
-      case 'array':
         updateMockServerData({
           type: UPDATE,
-          key: `._configurations$${name}.${key}.${newParam}`,
+          key: `._configurations$${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
           payload: {}
         })
         updateInsertData({
           type: UPDATE,
-          key: `${name}.${key}._${newParam}`,
+          key: `${name}.${key}._${typeof index !== 'undefined' ? index : newParam}`,
           payload: { name: '', variant: '' }
         })
         updateInsertData({
           type: UPDATE,
-          key: `${name}.${key}.${newParam}`,
+          key: `${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
           payload: {}
         })
         updateMockServerData({
           type: UPDATE,
-          key: `${name}.${key}.${newParam}`,
+          key: `${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
           payload: {}
         })
         updateInsertData({
           type: UPDATE,
-          key: `${name}._${key}`,
+          key: `${name}._${typeof index !== 'undefined' ? index : key}`,
+          payload: ''
+        })
+        break
+      case 'array':
+        updateMockServerData({
+          type: UPDATE,
+          key: `._configurations$${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
+          payload: []
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}.${key}._${typeof index !== 'undefined' ? index : newParam}`,
+          payload: { name: '', variant: '' }
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
+          payload: {}
+        })
+        updateMockServerData({
+          type: UPDATE,
+          key: `${name}.${key}.${typeof index !== 'undefined' ? index : newParam}`,
+          payload: []
+        })
+        updateInsertData({
+          type: UPDATE,
+          key: `${name}._${typeof index !== 'undefined' ? index : key}`,
           payload: ''
         })
         break

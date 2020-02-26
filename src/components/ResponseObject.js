@@ -16,7 +16,41 @@ const ResponseObject = ({
 }) => {
   const obj = Object.keys(routes).map(key => {
     const id = `${prefix}.${api}.${key}`
-    if (Array.isArray(routes[key])) return []
+    if (Array.isArray(routes[key])) {
+      return (
+        <div key={id} style={{ marginBottom: '0.5rem' }}>
+          {`${key}`}
+          {routes[key].map((route, i) => (
+            <ResponseObject
+              key={`${id}.${i}`}
+              prefix={`${prefix}.${api}.${key}`}
+              api={`${i}`}
+              routes={routes[key]}
+              configurations={configurations[key]}
+              insertData={insertData[api]}
+              insertParam={insertParam}
+              handleChange={handleChange}
+              handleInsertChange={handleInsertChange}
+              deleteParam={deleteParam}
+            />
+          ))}
+          <Select
+            style={{ width: 200 }}
+            data-key={`${prefix}.${api}._${key}`}
+            value={insertData[api][`_${key}`] ? insertData[api][`_${key}`].variant : ''}
+            onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}.${api}._${key}.variant` } }, preventDefault: () => {} }) }
+          >
+            <Option value="" disabled>--Select Value Type--</Option>
+            <Option value="text">text</Option>
+            <Option value="number">number</Option>
+            <Option value="boolean">boolean</Option>
+            <Option value="object">object</Option>
+            <Option value="array">array</Option>
+          </Select>
+          <Button type="link" onClick={event => insertParam(event, `${prefix}.${api}`, key, routes[key].length)} style={{color: '#52c41a'}}>Add Key</Button>
+        </div>
+      )
+    }
     if (typeof routes[key] === 'object') {
       return (
         <div key={id}>
