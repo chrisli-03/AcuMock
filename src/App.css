@@ -17,6 +17,7 @@
 
 .mock-server-list .ant-card {
   margin: 0.5rem;
+  min-height: 85px;
 }
 
 .new-mock-server .ant-btn {
@@ -39,4 +40,11 @@
 
 .ant-input-group-wrapper {
   width: unset !important;
+}
+
+.alert-holder {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 9999;
 }

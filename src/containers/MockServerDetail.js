@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Form, Input, Button } from 'antd'
 
 import { getMockServer } from '../store/mockServer/actions'
+import { createAlert } from '../store/alert/actions'
 
 import Spinner from '../components/Spinner'
 import APITree from '../components/APITree'
@@ -73,7 +74,7 @@ const defaultInsertData = {
   }
 }
 
-const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockServer }) => {
+const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
   const { name } = useParams()
   const history = useHistory()
   const mockServer = mockServers[name]
@@ -118,10 +119,26 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
   }
 
   const handleChange = event => {
+    let value = event.target.value
+    if (!event.target.dataset) {
+      event.target.dataset = {
+        key: event.target['data-key'],
+        variant: event.target['data-variant']
+      }
+    }
+    switch(event.target.dataset.variant) {
+      case 'number':
+        value = Number(value)
+        break
+      case 'boolean':
+        break
+      case 'string':
+      default:
+    }
     updateMockServerData({
       type: UPDATE,
       key: event.target.dataset.key,
-      payload: event.target.value
+      payload: value
     })
     event.preventDefault()
   }
@@ -204,8 +221,8 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
           type: UPDATE,
           key: `._configurations$${name}.${key}.${newParam}`,
           payload: {
-            "type": "input",
-            "variant": variant
+            type: 'input',
+            variant
           }
         })
         updateMockServerData({
@@ -277,6 +294,7 @@ const MockServerDetail = ({ form: { getFieldDecorator }, mockServers, getMockSer
     const newName = name || mockServerData.name
     axios[type](`/api/mock_server/${newName}`, mockServerData).then(response => {
       history.push('/')
+      createAlert('Saved successfully', 'success')
     })
     event.preventDefault()
   }
@@ -359,7 +377,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getMockServer: name => dispatch(getMockServer(name))
+  getMockServer: name => dispatch(getMockServer(name)),
+  createAlert: (message, type) => dispatch(createAlert(message, type))
 })
 
 export default connect(

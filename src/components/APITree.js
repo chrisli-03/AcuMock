@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Button } from 'antd'
 
-import ObjectResponse from './ObjectResponse'
+import ResponseObject from './ResponseObject'
 
 const APITree = ({
   prefix,
@@ -25,7 +25,7 @@ const APITree = ({
         value={routes.status}
         onChange={handleChange}
       />
-      <ObjectResponse
+      <ResponseObject
         prefix={`${prefix}.${api}`}
         api='data'
         routes={routes.data}

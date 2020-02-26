@@ -4,7 +4,7 @@ import { Spin } from 'antd'
 const Spinner = () => {
   return (
     <div className="spinner">
-      <Spin tip="Loading..." size="large"></Spin>
+      <Spin tip="Loading..." size="large" />
     </div>
   )
 }
