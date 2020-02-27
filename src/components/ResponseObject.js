@@ -1,6 +1,8 @@
 import React from 'react'
 import { Input, Select, Radio, Button } from 'antd'
 
+import ResponseArray from './ResponseArray'
+
 const { Option } = Select
 
 const ResponseObject = ({
@@ -19,35 +21,17 @@ const ResponseObject = ({
     if (Array.isArray(routes[key])) {
       return (
         <div key={id} style={{ marginBottom: '0.5rem' }}>
-          {`${key}`}
-          {routes[key].map((route, i) => (
-            <ResponseObject
-              key={`${id}.${i}`}
-              prefix={`${prefix}.${api}.${key}`}
-              api={`${i}`}
-              routes={routes[key]}
-              configurations={configurations[key]}
-              insertData={insertData[api]}
-              insertParam={insertParam}
-              handleChange={handleChange}
-              handleInsertChange={handleInsertChange}
-              deleteParam={deleteParam}
-            />
-          ))}
-          <Select
-            style={{ width: 200 }}
-            data-key={`${prefix}.${api}._${key}`}
-            value={insertData[api][`_${key}`] ? insertData[api][`_${key}`].variant : ''}
-            onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}.${api}._${key}.variant` } }, preventDefault: () => {} }) }
-          >
-            <Option value="" disabled>--Select Value Type--</Option>
-            <Option value="text">text</Option>
-            <Option value="number">number</Option>
-            <Option value="boolean">boolean</Option>
-            <Option value="object">object</Option>
-            <Option value="array">array</Option>
-          </Select>
-          <Button type="link" onClick={event => insertParam(event, `${prefix}.${api}`, key, routes[key].length)} style={{color: '#52c41a'}}>Add Key</Button>
+          <ResponseArray
+            prefix={`${prefix}.${api}`}
+            api={key}
+            routes={routes[key]}
+            configurations={configurations[key]}
+            insertData={insertData[api]}
+            insertParam={insertParam}
+            handleChange={handleChange}
+            handleInsertChange={handleInsertChange}
+            deleteParam={deleteParam}
+          />
         </div>
       )
     }
@@ -102,24 +86,6 @@ const ResponseObject = ({
             <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}}>Delete Key</Button>
           </div>
         )
-      // case 'select':
-      //   return (
-      //     <div key={id}>
-      //       <label htmlFor={id}>{key}: </label>
-      //       <select
-      //         id={id}
-      //         data-key={id}
-      //         data-variant={configuration.variant}
-      //         value={routes[key]}
-      //         onChange={handleChange}
-      //       >
-      //         {configuration.options.map(option => (
-      //           <option value={option.value} key={`${id}_${option.value}`}>{option.label}</option>
-      //         ))}
-      //       </select>
-      //       <button onClick={event => deleteParam(event, prefix, key)}>x</button>
-      //     </div>
-      //   )
       default:
         return null
     }
