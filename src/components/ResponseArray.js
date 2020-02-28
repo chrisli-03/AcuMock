@@ -19,8 +19,8 @@ const ResponseArray = ({
     const id = `${prefix}.${api}.${i}`
     if (Array.isArray(route)) {
       return <ResponseArray
-        key={`${id}.${i}`}
-        prefix={`${prefix}.${api}.${i}`}
+        key={`${id}`}
+        prefix={`${prefix}.${api}`}
         api={`${i}`}
         routes={routes[i]}
         configurations={configurations[i]}
@@ -33,8 +33,8 @@ const ResponseArray = ({
     }
     if (typeof route === 'object') {
       return <ResponseObject
-        key={`${id}.${i}`}
-        prefix={`${prefix}.${api}.${i}`}
+        key={`${id}`}
+        prefix={`${prefix}.${api}`}
         api={`${i}`}
         routes={routes[i]}
         configurations={configurations[i]}
