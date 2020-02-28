@@ -15,16 +15,32 @@ const UPDATE = 'UPDATE'
 const DELETE = 'DELETE'
 
 const recursiveStateChange = (state, keys, level, value) => {
-  if (level === keys.length-1) return Object.assign({}, state, {
-    [keys[level]]: value
-  })
+  if (level === keys.length-1) {
+    if (Array.isArray(state)) {
+      const prev = state.slice()
+      prev[keys[level]] = value
+      return prev
+    }
+    else {
+      return Object.assign({}, state, {
+        [keys[level]]: value
+      })
+    }
+  }
   else if (level > keys.length-1) return value
   if (Array.isArray(state[keys[level]])) {
     const arr = state[keys[level]].slice()
     arr[keys[level+1]] = recursiveStateChange(state[keys[level]][keys[level+1]], keys, level+2, value)
-    return Object.assign({}, state, {
-      [keys[level]]: arr
-    })
+    if (Array.isArray(state)) {
+      const prev = state.slice()
+      prev[keys[level]] = arr
+      return prev
+    }
+    else {
+      return Object.assign({}, state, {
+        [keys[level]]: arr
+      })
+    }
   }
   else {
     return Object.assign({}, state, {
