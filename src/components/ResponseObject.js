@@ -104,7 +104,7 @@ const ResponseObject = ({
   </Select>
   return <div>
     <div>
-      {api}
+      {api} (Object)
       {
         api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
         <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete Key</Button> :

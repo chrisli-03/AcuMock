@@ -99,14 +99,14 @@ const ResponseArray = ({
     </Select>
   return <div>
     <div>
-      {api}
+      {api} (Array)
       {
         api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
           <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete Key</Button> :
           null
       }
     </div>
-    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
+    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #fa8c16'}}>
       {arr}
       <div style={{marginBottom: '0.5rem'}}>
         {selectType}
