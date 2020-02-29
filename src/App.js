@@ -24,6 +24,7 @@ function App({ alerts}) {
   return (
     <Router>
       <div className="App">
+        <header className="header">AcuMock</header>
         {alertElements}
         <Switch>
           <Route path="/" exact>

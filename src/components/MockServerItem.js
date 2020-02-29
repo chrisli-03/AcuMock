@@ -80,7 +80,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
       }
       style={{ width: 300 }}
     >
-      Discription Placeholder
+      Description Placeholder
     </Card>
   )
 }
