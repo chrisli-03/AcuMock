@@ -53,7 +53,11 @@ const recursiveDelete = (state, keys) => {
   const copyState = JSON.parse(JSON.stringify(state))
   const toDelete = keys.pop()
   const targetParam = keys.reduce((acc, n) => acc[n], copyState)
-  delete targetParam[toDelete]
+  if (Array.isArray(targetParam)) {
+    targetParam.splice(Number(toDelete), 1)
+  } else {
+    delete targetParam[toDelete]
+  }
   return copyState
 }
 
