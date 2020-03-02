@@ -11,3 +11,7 @@ Problems while hosting app on aws Node.js instance
 3. Problem: `sudo node index.js` works but `sudo pm2 start index.js` still shows permission denied.
 
    Solution: pm2 already running with no privilege, use `pm2 kill` to stop, then `sudo pm2 start index.js` to host with privilege.
+
+4. Problem: Accessing state immediately after updating will still use the old state.
+
+   Solution: still have no idea how to solve this, maybe just avoid it.
