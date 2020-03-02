@@ -234,14 +234,21 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
     })
   }
 
-  const insertParam = (event, name, key, index) => {
+  const insertResponseData = (event, start, end, api, type) => {
+    console.log(start,end,api)
     event.preventDefault()
-    const { name: newParam, variant } = [...name.substring(1).split('.'), `_${key}`].reduce((acc, n) => acc[n], insertData)
+    deleteParam({ preventDefault: () => {} }, `${start}.${end}.${api}`, 'data')
+    insertParam({ preventDefault: () => {} }, `${start}.${end}`, api, undefined, { name: 'data', variant: type })
+  }
+
+  const insertParam = (event, name, key, index, payload) => {
+    event.preventDefault()
+    const { name: newParam, variant } = payload || [...name.substring(1).split('.'), `_${key}`].reduce((acc, n) => acc[n], insertData)
     if (!variant) {
       console.log('no variant')
       return
     }
-    if (typeof [...name.substring(1).split('.'), `${key}`].reduce((acc, n) => acc[n], mockServerData)[newParam] !== 'undefined') {
+    if (!payload && typeof [...name.substring(1).split('.'), `${key}`].reduce((acc, n) => acc[n], mockServerData)[newParam] !== 'undefined') {
       console.log('exist')
       return
     }
@@ -381,6 +388,7 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
                 handleInsertChange={handleInsertChange}
                 deleteParam={deleteParam}
                 key={api}
+                insertResponseData={insertResponseData}
               />
             })
           }

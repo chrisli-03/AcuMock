@@ -16,6 +16,7 @@ const ResponseObject = ({
   handleInsertChange,
   deleteParam
 }) => {
+  if (!routes) return <div></div>
   const obj = Object.keys(routes).map(key => {
     const id = `${prefix}.${api}.${key}`
     if (Array.isArray(routes[key])) {

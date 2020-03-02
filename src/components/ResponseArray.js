@@ -85,18 +85,18 @@ const ResponseArray = ({
   })
 
   const selectType = <Select
-      style={{ width: 200 }}
-      data-key={`${prefix}._${api}`}
-      value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
-      onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}._${api}.variant` } }, preventDefault: () => {} }) }
-    >
-      <Option value="" disabled>--Select Value Type--</Option>
-      <Option value="text">text</Option>
-      <Option value="number">number</Option>
-      <Option value="boolean">boolean</Option>
-      <Option value="object">object</Option>
-      <Option value="array">array</Option>
-    </Select>
+    style={{ width: 200 }}
+    data-key={`${prefix}._${api}`}
+    value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
+    onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}._${api}.variant` } }, preventDefault: () => {} }) }
+  >
+    <Option value="" disabled>--Select Value Type--</Option>
+    <Option value="text">text</Option>
+    <Option value="number">number</Option>
+    <Option value="boolean">boolean</Option>
+    <Option value="object">object</Option>
+    <Option value="array">array</Option>
+  </Select>
   return <div>
     <div>
       {api} (Array)
