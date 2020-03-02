@@ -31,17 +31,7 @@ const APITree = ({
         onChange={handleChange}
       />
       <br />
-      <Button
-        type="link"
-        onClick={
-          event => {
-            insertResponseData(event, start, end, api, 'array')
-          }
-        }
-        style={{color: '#1890ff'}}
-      >
-        Change To Array
-      </Button>
+      <label>Response Data Type:</label>
       <Button
         type="link"
         onClick={
@@ -49,9 +39,20 @@ const APITree = ({
             insertResponseData(event, start, end, api, 'object')
           }
         }
-        style={{color: '#1890ff'}}
+        disabled={!Array.isArray(routes.data) && typeof routes.data === 'object'}
       >
-        Change To Object
+        Object
+      </Button>
+      <Button
+        type="link"
+        onClick={
+          event => {
+            insertResponseData(event, start, end, api, 'array')
+          }
+        }
+        disabled={Array.isArray(routes.data)}
+      >
+        Array
       </Button>
       {
         Array.isArray(routes.data) ?
