@@ -15,3 +15,7 @@ Problems while hosting app on aws Node.js instance
 4. Problem: Accessing state immediately after updating will still use the old state.
 
    Solution: still have no idea how to solve this, maybe just avoid it.
+
+4. Problem: Docker-Compose Nginx error: connect() failed(111: Connection refused) while connecting to upstream
+
+   Solution: instead of `proxy_pass: localhost` use `proxy_pass: container_name` where container_name is the name of container in docker-compose.yml

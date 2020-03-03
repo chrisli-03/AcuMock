@@ -5,9 +5,10 @@
   "main": "server/index.js",
   "scripts": {
     "client": "react-scripts start",
-    "build:client": "react-scripts build",
+    "build:client": "react-scripts --max_old_space_size=4096 build",
     "eject": "react-scripts eject",
     "server": "nodemon server/index.js",
+    "start:prod": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -31,7 +32,7 @@
     "axios": "^0.19.2",
     "nodemon": "^2.0.2"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:3001",
   "eslintConfig": {
     "extends": "react-app"
   },
