@@ -61,3 +61,7 @@
   width: 100vw;
   z-index: 9999;
 }
+
+.rotate-90 {
+  transform: rotate(90deg);
+}

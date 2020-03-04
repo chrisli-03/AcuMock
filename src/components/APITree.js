@@ -1,5 +1,5 @@
-import React from 'react'
-import { Input, Button } from 'antd'
+import React, { useState } from 'react'
+import { Input, Button, Icon } from 'antd'
 
 import ResponseObject from './ResponseObject'
 import ResponseArray from './ResponseArray'
@@ -16,12 +16,20 @@ const APITree = ({
   deleteParam,
   insertResponseData
 }) => {
+  const [hide, setHide] = useState(false)
+
   let start = prefix.split('.')
   const end = start.pop()
   start = start.join('.')
   return <div style={{marginBottom: '0.5rem'}}>
-    <div>{api} <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete API</Button></div>
-    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
+    <div>
+      <a href="javascript:void(0);" onClick={() => setHide(!hide)} style={{color: '#13c2c2'}}>
+        <Icon className={`${hide ? 'rotate-90' : ''}`} type="right" theme="outlined" style={{transition: 'transform 0.4s'}} />
+        {api}
+      </a>
+      <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete API</Button>
+    </div>
+    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff', display: hide ? 'none' : 'block'}}>
       <label htmlFor={`${prefix}.${api}.status`}>status: </label>
       <Input
         id={`${prefix}.${api}.status`}
