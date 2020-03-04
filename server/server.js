@@ -2,10 +2,21 @@ const path = require('path')
 const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
+const compression = require('compression')
 const { check, validationResult } = require('express-validator')
 
 const MockServer = require('./MockServer')
 const { readMockServerFile, createMockServerFile, deleteMockServerFile } = require('./fileHandler')
+
+const shouldCompress = (req, res) => {
+  if (req.headers['x-no-compression']) {
+    // don't compress responses with this request header
+    return false
+  }
+
+  // fallback to standard filter function
+  return compression.filter(req, res)
+}
 
 const basicRequestHandler = fn => async (req, res) => {
   try {
@@ -59,7 +70,7 @@ const startServer = mockServers => {
 
 
   app.use(bodyParser.json())
-  app.use(express.static(path.join(__dirname, '../build')))
+  app.use(compression({ filter: shouldCompress }))
 
   app.get('/api/mock_server', basicRequestHandler((req, res) => {
     res.status(200).send([...mockServers.keys()].sort().map(key => Object.assign({}, { name: key }, mockServers.get(key))))
@@ -122,6 +133,9 @@ const startServer = mockServers => {
     deleteMockServer(name)
     res.status(200).send()
   }))
+
+  app.use(express.static(path.join(__dirname, '../build')))
+  app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))
 
   app.listen(port, () => console.log(`AcuMock app listening on port ${port}!`))
 }

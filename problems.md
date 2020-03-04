@@ -19,3 +19,7 @@ Problems while hosting app on aws Node.js instance
 4. Problem: Docker-Compose Nginx error: connect() failed(111: Connection refused) while connecting to upstream
 
    Solution: instead of `proxy_pass: localhost` use `proxy_pass: container_name` where container_name is the name of container in docker-compose.yml
+
+5. Problem: Refreshing on routes other than root result in 404
+
+   Solution: in server.js add `app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))`
