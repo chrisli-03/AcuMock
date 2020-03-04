@@ -13,7 +13,7 @@ const init = mockServers => {
     files.forEach(function(file, i) {
       if (!/\.json$/.test(file)) return
       const apiData = readMockServerFile(file.replace(/\.json$/, ''))
-      const mockServer = new MockServer(apiData.routes, apiData.port)
+      const mockServer = new MockServer(apiData.routes, apiData.port, apiData.description)
       mockServers.set(file.replace(/\.json$/, ''), mockServer)
     })
   })

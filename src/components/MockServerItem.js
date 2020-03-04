@@ -32,7 +32,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
     axios.delete(`/api/mock_server/${mockServer}`).then(() => {
       deleteMockServerFromState(mockServer)
     }).catch(err => {
-      switch (err.resposne.status) {
+      switch (err.response.status) {
         default:
           alert('An Error has occurred.')
       }
@@ -42,14 +42,14 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
   const editBtn = <Button
     size="small"
     type="link"
-    onClick={() => history.push(`/mock_server/${mockServer}`)}
+    onClick={() => history.push(`/mock_server/${mockServer.name}`)}
     disabled={enabled}
   >
     edit
   </Button>
   return (
     <Card
-      title={mockServer}
+      title={mockServer.name}
       size="small"
       extra={
         <React.Fragment>
@@ -63,7 +63,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
 
           <Popconfirm
             title="Are you sure delete this mock server?"
-            onConfirm={() => deleteMockServer(mockServer)}
+            onConfirm={() => deleteMockServer(mockServer.name)}
             okText="Yes"
             cancelText="No"
             icon={<Icon type="exclamation-circle" style={{ color: 'red' }} />}
@@ -72,7 +72,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
           </Popconfirm>
           <Switch
             size="small"
-            onChange={event => toggleMockServer(mockServer, event)}
+            onChange={event => toggleMockServer(mockServer.name, event)}
             checked={enabled}
             disabled={updating}
           />
@@ -80,7 +80,8 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
       }
       style={{ width: 300 }}
     >
-      Description Placeholder
+      <div>Port {mockServer.port}</div>
+      <div>Description {mockServer.description}</div>
     </Card>
   )
 }

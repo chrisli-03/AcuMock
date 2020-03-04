@@ -46,7 +46,7 @@ const startServer = mockServers => {
 
   const createMockServer = (name, data) => {
     createMockServerFile(name, data)
-    const mockServer = new MockServer(data.routes, data.port)
+    const mockServer = new MockServer(data.routes, data.port, data.description)
     mockServers.set(name, mockServer)
   }
 
@@ -62,7 +62,7 @@ const startServer = mockServers => {
   app.use(express.static(path.join(__dirname, '../build')))
 
   app.get('/api/mock_server', basicRequestHandler((req, res) => {
-    res.status(200).send([...mockServers.keys()].sort())
+    res.status(200).send([...mockServers.keys()].sort().map(key => Object.assign({}, { name: key }, mockServers.get(key))))
   }))
   app.get('/api/mock_server/:name', basicRequestHandler((req, res) => {
     res.status(200).send(readMockServerFile(req.params.name))

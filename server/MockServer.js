@@ -2,9 +2,10 @@ const express = require('express')
 const http = require('http')
 
 class MockServer {
-  constructor(apiData, port) {
+  constructor(apiData, port, description) {
     this.app = express()
     this.port = port
+    this.description = description
     this.running = false
     for (const method in apiData) {
       for (const route in apiData[method]) {

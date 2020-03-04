@@ -77,6 +77,7 @@ const reducer = (state, action) => {
 const defaultMockServer = {
   name: '',
   port: '',
+  description: '',
   routes: {
     get: {},
     post: {},
@@ -87,6 +88,7 @@ const defaultMockServer = {
   _configurations$: {
     name: { type: 'input', variant: 'text' },
     port: { type: 'input', variant: 'number' },
+    description: { type: 'input', variant: 'text' },
     routes: {
       get: {},
       post: {},
@@ -235,7 +237,6 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
   }
 
   const insertResponseData = (event, start, end, api, type) => {
-    console.log(start,end,api)
     event.preventDefault()
     deleteParam({ preventDefault: () => {} }, `${start}.${end}.${api}`, 'data')
     insertParam({ preventDefault: () => {} }, `${start}.${end}`, api, undefined, { name: 'data', variant: type })
@@ -421,13 +422,23 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
             onChange={handleChange}
           />
         </div>
-        <div>
+        <div style={{marginBottom:'0.5rem'}}>
           <label htmlFor="port">Port: </label>
           <Input
             id="port"
             data-key=".port"
             data-variant={mockServerData._configurations$.port.variant}
             value={mockServerData.port}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="description">Description: </label>
+          <Input
+            id="description"
+            data-key=".description"
+            data-variant={mockServerData._configurations$.description.variant}
+            value={mockServerData.description}
             onChange={handleChange}
           />
         </div>
