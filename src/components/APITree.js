@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Input, Button, Icon } from 'antd'
 
 import ResponseObject from './ResponseObject'
@@ -23,10 +24,10 @@ const APITree = ({
   start = start.join('.')
   return <div style={{marginBottom: '0.5rem'}}>
     <div>
-      <a href="javascript:void(0);" onClick={() => setHide(!hide)} style={{color: '#13c2c2'}}>
-        <Icon className={`${hide ? 'rotate-90' : ''}`} type="right" theme="outlined" style={{transition: 'transform 0.4s'}} />
+      <NavLink to="#" onClick={() => setHide(!hide)} style={{color: '#13c2c2'}}>
+        <Icon className={`${hide ? 'rotate-90' : ''}`} type="right" theme="outlined" style={{transition: 'transform 0.2s'}} />
         {api}
-      </a>
+      </NavLink>
       <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete API</Button>
     </div>
     <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff', display: hide ? 'none' : 'block'}}>

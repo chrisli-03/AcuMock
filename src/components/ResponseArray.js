@@ -61,7 +61,7 @@ const ResponseArray = ({
               onChange={handleChange}
               addonBefore={configuration.variant}
             />
-            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, i)} style={{color: '#f5222d'}}>Delete Key</Button>
+            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, i)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button>
           </div>
         )
       case 'boolean':
@@ -76,7 +76,7 @@ const ResponseArray = ({
               <Radio value={true} data-variant={configuration.variant} data-key={id}>True</Radio>
               <Radio value={false} data-variant={configuration.variant} data-key={id}>False</Radio>
             </Radio.Group>
-            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, i)} style={{color: '#f5222d'}}>Delete Key</Button>
+            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, i)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button>
           </div>
         )
       default:
@@ -102,7 +102,7 @@ const ResponseArray = ({
       {api} (Array)
       {
         api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
-          <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete Key</Button> :
+          <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button> :
           null
       }
     </div>

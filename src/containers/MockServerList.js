@@ -32,7 +32,7 @@ const MockServerList = (
   }
 
   const mockServerItems = mockServers.map((mockServer, i) => (
-    <MockServerItem mockServer={mockServer} enabled={mockServerStatus[mockServer]} key={i} />
+    <MockServerItem mockServer={mockServer} enabled={mockServerStatus[mockServer.name]} key={i} />
   ))
 
   return (
