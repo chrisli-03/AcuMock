@@ -27,3 +27,7 @@ Problems while hosting app on aws Node.js instance
 7. Problem: Not enough ram when building client.
 
    Solution: haven't found one... tried increasing max ram with `--max-old-space-size` but didn't work.
+
+8. Problem: Webpack alias working on windows but gets unresolved error on linux
+
+   Solution: tried to remove alias first but still showing the same error, cause of this is because the file is all lowercase but the import line has first letter uppercase, windows ignored case on filename but linux doesn't do that, changing the first letter of filename to uppercase fixed this issue.
