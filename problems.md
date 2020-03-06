@@ -2,7 +2,7 @@ Problems while hosting app on aws Node.js instance
 
 1. Problem: port 80 already used by Bitnami welcome page
 
-   Solution: Login to terminal, use `sudo /opt/bitnami/ctlscript.sh stop` to turn off Bitnami welcom page.
+   Solution: Login to terminal, use `sudo /opt/bitnami/ctlscript.sh stop` to turn off Bitnami welcome page.
 
 2. Problem: Error permission denied 0.0.0.0:80
 
@@ -23,3 +23,7 @@ Problems while hosting app on aws Node.js instance
 5. Problem: Refreshing on routes other than root result in 404
 
    Solution: in server.js add `app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))`
+
+7. Problem: Not enough ram when building client.
+
+   Solution: haven't found one... tried increasing max ram with `--max-old-space-size` but didn't work.
