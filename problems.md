@@ -35,7 +35,3 @@ Problems while hosting app on aws Node.js instance
 9. Problem: Webpack error `Cannot use [chunkhash] or [contenthash] for chunk in '[name].[contenthash].js' (use [hash] instead)`
 
    Solution: comment out `new webpack.HotModuleReplacementPlugin()` in plugins
-
-10. Problem: Postcss error `custom-properties: false, SyntaxError: Unexpected token -`
-
-    Solution: change 'postcss-loader' to 'postcss-loader?pack=sass' in webpack config module.rules
