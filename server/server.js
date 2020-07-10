@@ -1,12 +1,11 @@
 const path = require('path')
-const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const compression = require('compression')
 const { check, validationResult } = require('express-validator')
+const setupDB = require('./db')
 
-const MockServer = require('./MockServer')
-const { readMockServerFile, createMockServerFile, deleteMockServerFile } = require('./fileHandler')
+const pool = setupDB()
 
 const shouldCompress = (req, res) => {
   if (req.headers['x-no-compression']) {
@@ -51,93 +50,60 @@ const basicRequestHandler = fn => async (req, res) => {
   }
 }
 
-const startServer = mockServers => {
-  const app = express()
-  const port = 3001
+const app = express()
+const port = 3001
 
-  const createMockServer = (name, data) => {
-    createMockServerFile(name, data)
-    const mockServer = new MockServer(data.routes, data.port, data.description)
-    mockServers.set(name, mockServer)
-  }
+const createMockServer = (name, data) => {
 
-  const deleteMockServer = name => {
-    deleteMockServerFile(name)
-    const mockServer = mockServers.get(name)
-    if (mockServer && mockServer.running) mockServer.stop()
-    mockServers.delete(name)
-  }
-
-
-  app.use(bodyParser.json())
-  app.use(compression({ filter: shouldCompress }))
-
-  app.get('/api/mock_server', basicRequestHandler((req, res) => {
-    res.status(200).send([...mockServers.keys()].sort().map(key => Object.assign({}, { name: key }, mockServers.get(key))))
-  }))
-  app.get('/api/mock_server/:name', basicRequestHandler((req, res) => {
-    res.status(200).send(readMockServerFile(req.params.name))
-  }))
-  app.get('/api/mock_server_status', basicRequestHandler((req, res) => {
-    const status = {}
-    for (const [key, value] of mockServers.entries()) {
-      status[key] = value.running
-    }
-    res.status(200).send(status)
-  }))
-
-  app.post('/api/mock_server/:name', [
-      check('name').isLength({ min: 1 }),
-      check('port').exists(),
-      check('routes').exists()
-    ], basicRequestHandler((req, res) => {
-      const data = req.body
-      const name = req.params.name
-      createMockServer(name, data)
-      res.status(200).send()
-    }
-  ))
-
-  app.put('/api/mock_server/:name', [
-      check('name').isLength({ min: 1 }),
-      check('port').exists(),
-      check('routes').exists()
-    ], basicRequestHandler((req, res) => {
-      const data = req.body
-      const name = req.params.name
-      const newName = req.body.name
-      deleteMockServer(name)
-      createMockServer(newName, data)
-      res.status(200).send()
-    }
-  ))
-
-  app.patch('/api/mock_server/:name/status', [
-      check('running').exists()
-    ], basicRequestHandler(async (req, res) => {
-      const server = mockServers.get(req.params.name)
-      if (!server) {
-        res.status(404).send('Mock Server Not Found.')
-        return
-      }
-      await server[req.body.running ? 'start' : 'stop']().then(() => {
-        res.status(200).send()
-      }).catch(e => {
-        throw e
-      })
-    }
-  ))
-
-  app.delete('/api/mock_server/:name', basicRequestHandler((req, res) => {
-    const name = req.params.name
-    deleteMockServer(name)
-    res.status(200).send()
-  }))
-
-  app.use(express.static(path.join(__dirname, '../build')))
-  app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))
-
-  app.listen(port, () => console.log(`AcuMock app listening on port ${port}!`))
 }
 
-module.exports = startServer
+const deleteMockServer = name => {
+
+}
+
+
+app.use(bodyParser.json())
+app.use(compression({ filter: shouldCompress }))
+
+app.get('/api/mock_server', basicRequestHandler((req, res) => {
+
+}))
+app.get('/api/mock_server/:name', basicRequestHandler((req, res) => {
+
+}))
+
+app.post('/api/mock_server/:name', [
+    check('name').isLength({ min: 1 }),
+    check('port').exists(),
+    check('routes').exists()
+  ], basicRequestHandler((req, res) => {
+    const data = req.body
+    const name = req.params.name
+    console.log(data, name)
+    res.status(200).send()
+  }
+))
+
+app.put('/api/mock_server/:name', [
+    check('name').isLength({ min: 1 }),
+    check('port').exists(),
+    check('routes').exists()
+  ], basicRequestHandler((req, res) => {
+    const data = req.body
+    const name = req.params.name
+    const newName = req.body.name
+    console.log()
+    res.status(200).send()
+  }
+))
+
+app.delete('/api/mock_server/:name', basicRequestHandler((req, res) => {
+  const name = req.params.name
+  
+  res.status(200).send()
+}))
+
+app.use(express.static(path.join(__dirname, '../build')))
+app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))
+
+app.listen(port, () => console.log(`AcuMock app listening on port ${port}!`))

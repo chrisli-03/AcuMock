@@ -7,8 +7,8 @@
     "client": "react-scripts start",
     "build:client": "react-scripts --max_old_space_size=4096 build",
     "eject": "react-scripts eject",
-    "server": "nodemon server/index.js",
-    "start:prod": "node server/index.js",
+    "server": "nodemon server/server.js",
+    "start:prod": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,6 +19,7 @@
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
+    "mysql": "^2.18.1",
     "portfinder": "^1.0.25",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
