@@ -10,4 +10,8 @@ function DataBase() {
   })
 }
 
+DataBase.prototype.getConnection = function(error, connection) {
+  this.pool.getConnection(error, connection)
+}
+
 module.exports = DataBase

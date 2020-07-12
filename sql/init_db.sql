@@ -3,7 +3,6 @@ USE acu_mock;
 CREATE TABLE IF NOT EXISTS tb_server (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    port INTEGER NOT NULL,
     status INTEGER NOT NULL,
     redirectAddress VARCHAR(255)
 );
