@@ -1,15 +1,13 @@
 const mysql = require('mysql')
 
-const setupDB = () => {
-  const pool = mysql.createPool({
+function DataBase() {
+  this.pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
     user: 'root',
     password: 'password',
     database: 'acu_mock'
   })
-
-  return pool
 }
 
-module.exports = setupDB
+module.exports = DataBase

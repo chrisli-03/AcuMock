@@ -3,9 +3,27 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const compression = require('compression')
 const { check, validationResult } = require('express-validator')
-const setupDB = require('./db')
+const DataBase = require('./db')
 
-const pool = setupDB()
+const db = new DataBase()
+
+// const Repository = require('./repository/repository')
+// const testRepository = new Repository('tb_server')
+//
+// db.pool.getConnection(function(error, connection) {
+//   if (error) throw error
+//   connection.beginTransaction(async function(error) {
+//     if (error) throw error
+//     const test = await testRepository.insert(connection, { name: 'test', port: 8080, status: 0, redirectAddress: '' })
+//     connection.commit(function(error) {
+//       if (error) {
+//         return connection.rollback(function() {
+//           throw error
+//         })
+//       }
+//     })
+//   })
+// })
 
 const shouldCompress = (req, res) => {
   if (req.headers['x-no-compression']) {
