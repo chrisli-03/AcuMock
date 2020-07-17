@@ -1,11 +1,18 @@
-function Server(data) {
-  this.name = data.name
-  this.status = data.status
-  this.redirectAddress = data.redirectAddress || ''
-  Object.defineProperty(this, 'api', {
-    enumerable: false,
-    value: data.api
-  })
+class Server {
+  constructor({ id, name, status, redirectAddress }) {
+    this.id = id
+    this.name = name
+    this.status = status
+    this.redirectAddress = redirectAddress || ''
+  }
+
+  getObject() {
+    return {
+      name: this.name,
+      status: this.status,
+      redirectAddress: this.redirectAddress
+    }
+  }
 }
 
 module.exports = Server

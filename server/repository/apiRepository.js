@@ -1,8 +1,9 @@
 const Repository = require('./repository')
 
-function APIRepository() {}
-
-APIRepository.prototype = new Repository()
-APIRepository.prototype.table = 'tb_api'
+class APIRepository extends Repository {
+  constructor() {
+    super('tb_api')
+  }
+}
 
 module.exports = APIRepository

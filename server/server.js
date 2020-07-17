@@ -2,10 +2,7 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const compression = require('compression')
-const DataBase = require('./db')
 const setupServerRoutes = require('./routes/serverRoutes')
-
-const db = new DataBase()
 
 const shouldCompress = (req, res) => {
   if (req.headers['x-no-compression']) {
@@ -23,7 +20,7 @@ const port = 3001
 app.use(bodyParser.json())
 app.use(compression({ filter: shouldCompress }))
 
-setupServerRoutes(app, db)
+setupServerRoutes(app)
 
 app.use(express.static(path.join(__dirname, '../build')))
 app.use((req, res) => res.sendFile(path.join(__dirname, '../build/index.html')))
