@@ -1,17 +1,10 @@
 class Server {
-  constructor({ id, name, status, redirectAddress }) {
+  constructor({ id, name, description, status, redirectAddress }) {
     this.id = id
     this.name = name
+    this.description = description
     this.status = status
     this.redirectAddress = redirectAddress || ''
-  }
-
-  getObject() {
-    return {
-      name: this.name,
-      status: this.status,
-      redirectAddress: this.redirectAddress
-    }
   }
 }
 

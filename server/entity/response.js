@@ -1,14 +1,13 @@
-function Response(data) {
-  this.api = data.api
-  this.parent = data.parent
-  this.response_key = data.key
-  this.response_value = data.value
-  this.fixed = data.fixed
-  this.type = data.type
-  Object.defineProperty(this, 'children', {
-    enumerable: false,
-    value: data.children
-  })
+class Response {
+  constructor({ id, api, parent, response_key, response_value, fixed, type }) {
+    this.id = id
+    this.api = api
+    this.parent = parent
+    this.response_key = response_key
+    this.response_value = response_value
+    this.fixed = fixed
+    this.type = type
+  }
 }
 
 module.exports = Response

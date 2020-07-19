@@ -11,6 +11,7 @@ const basicRequestHandler = fn => async (req, res) => {
     }
     await fn(req, res)
   } catch(e) {
+    console.log(e)
     switch (e.message) {
       case 'Mock Server Already Running.':
       case 'Mock Server Not Running.':

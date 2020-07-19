@@ -20,8 +20,8 @@ const mockServerCheck = [
   check('api.*.type').exists(),
   check('api.*.status').exists(),
   check('api.*.response').exists(),
-  check('api.*.response.*.key').exists(),
-  check('api.*.response.*.value').exists(),
+  check('api.*.response.*.response_key').exists(),
+  check('api.*.response.*.response_value').exists(),
   check('api.*.response.*.fixed').exists(),
   check('api.*.response.*.type').exists(),
   oneOf([
@@ -29,8 +29,8 @@ const mockServerCheck = [
     check('api.*.response.*.children').custom(value => {
       const nestedCheck = value => {
         for (const child of value) {
-          if (!Object.prototype.hasOwnProperty.call(child, 'key')
-            ||!Object.prototype.hasOwnProperty.call(child, 'value')
+          if (!Object.prototype.hasOwnProperty.call(child, 'response_key')
+            ||!Object.prototype.hasOwnProperty.call(child, 'response_value')
             ||!Object.prototype.hasOwnProperty.call(child, 'fixed')
             ||!Object.prototype.hasOwnProperty.call(child, 'type')) {
             return Promise.reject()
@@ -63,6 +63,22 @@ function setupServerRoutes(app) {
     })
   }))
 
+  app.get('/api/mock_server/:serverID/api', basicRequestHandler((req, res) => {
+    db.getConnection(async function(error, connection) {
+      if (error) throw error
+      const apiList = await apiRepository.findByServerID(connection, req.params.serverID)
+      res.status(200).send(apiList)
+    })
+  }))
+
+  app.get('/api/mock_server/:serverID/api/:apiID/response', basicRequestHandler((req, res) => {
+    db.getConnection(async function(error, connection) {
+      if (error) throw error
+      const apiList = await responseRepository.findByAPIID(connection, req.params.apiID)
+      res.status(200).send(apiList)
+    })
+  }))
+
   app.post('/api/mock_server/:name', mockServerCheck, basicRequestHandler((req, res) => {
     return new Promise((resolve, reject) => {
       db.getConnection(function(error, connection) {
@@ -71,7 +87,7 @@ function setupServerRoutes(app) {
           if (error) reject(error)
           try {
             const data = new Server(req.body)
-            const test = await serverRepository.insert(connection, data.getObject())
+            const test = await serverRepository.insert(connection, data)
             const insertResponse = async (responses, api, parent=null) => {
               for (const response of responses) {
                 response.api = api
@@ -88,7 +104,7 @@ function setupServerRoutes(app) {
                 api.server = test.insertId
                 const apiData = new API(api)
                 const apiId = await apiRepository.insert(connection, apiData)
-                await insertResponse(apiData.response, apiId.insertId)
+                await insertResponse(api.response, apiId.insertId)
               }
             }
             await insertAPI(req.body.api)

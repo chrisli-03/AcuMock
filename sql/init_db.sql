@@ -3,6 +3,7 @@ USE acu_mock;
 CREATE TABLE IF NOT EXISTS tb_server (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
+    description VARCHAR(255) NOT NULL,
     status INTEGER NOT NULL,
     redirectAddress VARCHAR(255)
 );

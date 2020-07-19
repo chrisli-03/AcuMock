@@ -80,8 +80,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
       }
       style={{ width: 300 }}
     >
-      <div>Port {mockServer.port}</div>
-      <div>Description {mockServer.description}</div>
+      <div>{mockServer.description}</div>
     </Card>
   )
 }

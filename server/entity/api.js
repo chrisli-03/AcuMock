@@ -1,12 +1,11 @@
-function API(data) {
-  this.server = data.server
-  this.url = data.url
-  this.type = data.type
-  this.status = data.status
-  Object.defineProperty(this, 'response', {
-    enumerable: false,
-    value: data.response
-  })
+class API {
+  constructor({ id, server, url, type, status }) {
+    this.id = id
+    this.server = server
+    this.url = url
+    this.type = type
+    this.status = status
+  }
 }
 
 module.exports = API
