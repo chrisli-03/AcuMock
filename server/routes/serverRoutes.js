@@ -63,15 +63,23 @@ function setupServerRoutes(app) {
     })
   }))
 
-  app.get('/api/mock_server/:serverID/api', basicRequestHandler((req, res) => {
+  app.get('/api/mock_server/:serverName', basicRequestHandler((req, res) => {
     db.getConnection(async function(error, connection) {
       if (error) throw error
-      const apiList = await apiRepository.findByServerID(connection, req.params.serverID)
+      const server = (await serverRepository.findByServerName(connection, req.params.serverName))[0]
+      res.status(200).send(server)
+    })
+  }))
+
+  app.get('/api/mock_server/:serverName/api', basicRequestHandler((req, res) => {
+    db.getConnection(async function(error, connection) {
+      if (error) throw error
+      const apiList = await apiRepository.findByServerID(connection, req.params.serverName)
       res.status(200).send(apiList)
     })
   }))
 
-  app.get('/api/mock_server/:serverID/api/:apiID/response', basicRequestHandler((req, res) => {
+  app.get('/api/mock_server/:serverName/api/:apiID/response', basicRequestHandler((req, res) => {
     db.getConnection(async function(error, connection) {
       if (error) throw error
       const apiList = await responseRepository.findByAPIID(connection, req.params.apiID)

@@ -9,12 +9,6 @@ import { createAlert } from '../store/alert/actions'
 
 import Spinner from '../components/Spinner'
 
-const defaultMockServer = {
-  name: '',
-  description: '',
-  routes: []
-}
-
 const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
   const { name } = useParams()
   const [form] = Form.useForm();
@@ -27,9 +21,9 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
 
   useEffect(() => {
     if (mockServer && !mockServer.fetching) {
-
+      form.setFieldsValue(mockServer.data)
     }
-  }, [mockServer])
+  }, [form, mockServer])
 
   if (name && (!mockServer || mockServer.fetching)) {
     return (
@@ -37,14 +31,15 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
     )
   }
 
-  const handleSubmit = event => {
+  const onFinish = event => {
+    console.log(event)
     // const type = name ? 'put' : 'post'
     // const newName = name || mockServerData.name
     // axios[type](`/api/mock_server/${newName}`, mockServerData).then(response => {
     //   history.push('/')
     //   createAlert('Saved successfully', 'success')
     // })
-    event.preventDefault()
+    // event.preventDefault()
   }
 
   const cancel = event => {
@@ -59,26 +54,35 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
   const routeForm = generateRouteForm()
 
   return (
-    <Form id="form" form={form} onSubmit={handleSubmit} style={{padding: '0.5rem'}}>
-      <div style={{marginBottom: '0.5rem'}}>
-        <div style={{marginBottom:'0.5rem'}}>
-          <label htmlFor="name">Name: </label>
-          <Input
-            id="name"
-            data-key="name"
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description: </label>
-          <Input
-            id="description"
-            data-key="description"
-          />
-        </div>
-      </div>
+    <Form
+      id="form"
+      form={form}
+      onFinish={onFinish}
+      style={{padding: '0.5rem'}}
+    >
+      <Form.Item
+        label="Name"
+        name="name"
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="Description"
+        name="description"
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        label="Redirect Address"
+        name="redirectAddress"
+      >
+        <Input />
+      </Form.Item>
       {routeForm}
-      <Button type="primary" htmlType="submit" value="Submit" style={{marginRight: '0.5rem'}}>Submit</Button>
-      <Button onClick={cancel}>Cancel</Button>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" style={{marginRight: '0.5rem'}}>Submit</Button>
+        <Button onClick={cancel}>Cancel</Button>
+      </Form.Item>
     </Form>
   )
 }
@@ -95,4 +99,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Form.create({ name: 'mock_server' })(MockServerDetail))
+)(MockServerDetail)

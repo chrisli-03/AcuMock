@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { Card, Button, Switch, Popover, Popconfirm, Icon } from 'antd'
+import { Card, Button, Switch, Popover, Popconfirm } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 import { deleteMockServer } from '../store/mockServerList/actions'
 import { updateMockServerStatus } from '../store/mockServerStatus/actions'
@@ -66,7 +67,7 @@ const MockServerItem = ({mockServer, enabled, deleteMockServerFromState, updateM
             onConfirm={() => deleteMockServer(mockServer.name)}
             okText="Yes"
             cancelText="No"
-            icon={<Icon type="exclamation-circle" style={{ color: 'red' }} />}
+            icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
           >
             <Button size="small" type="link" style={{ color: '#f00' }}>delete</Button>
           </Popconfirm>

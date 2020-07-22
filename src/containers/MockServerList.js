@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Button, Icon } from 'antd'
+import { Button } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 
 import { getMockServerList } from '../store/mockServerList/actions'
 import { getMockServerStatus } from '../store/mockServerStatus/actions'
@@ -44,7 +45,7 @@ const MockServerList = (
           type="link"
           onClick={() => history.push('/mock_server/new')}
         >
-          <Icon type="plus" />
+          <PlusOutlined />
         </Button>
       </div>
     </div>
