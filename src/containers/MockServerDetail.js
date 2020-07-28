@@ -78,7 +78,10 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
       >
         <Input />
       </Form.Item>
-      {routeForm}
+      <Form.Item>
+        <div>Get</div>
+
+      </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{marginRight: '0.5rem'}}>Submit</Button>
         <Button onClick={cancel}>Cancel</Button>
