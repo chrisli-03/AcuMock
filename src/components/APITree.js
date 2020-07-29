@@ -1,93 +1,43 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Input, Button, Icon } from 'antd'
-
-import ResponseObject from './ResponseObject'
-import ResponseArray from './ResponseArray'
+import { Button, Input, Form } from 'antd'
+import { RightOutlined } from '@ant-design/icons'
 
 const APITree = ({
-  prefix,
-  api,
-  routes,
-  configurations,
-  insertData,
-  insertParam,
-  handleChange,
-  handleInsertChange,
-  deleteParam,
-  insertResponseData
+  field,
+  index
 }) => {
-  const [hide, setHide] = useState(false)
+  const [hide, setHide] = useState(true)
 
-  let start = prefix.split('.')
-  const end = start.pop()
-  start = start.join('.')
   return <div style={{marginBottom: '0.5rem'}}>
-    <div>
-      <NavLink to="#" onClick={() => setHide(!hide)} style={{color: '#13c2c2'}}>
-        <Icon className={`${hide ? 'rotate-90' : ''}`} type="right" theme="outlined" style={{transition: 'transform 0.2s'}} />
-        {api}
+    <div className="d-flex">
+      <NavLink className="d-flex" to="#" onClick={() => setHide(!hide)} style={{color: '#13c2c2'}}>
+        <RightOutlined className={`${hide ? '' : 'rotate-90'}`} style={{transition: 'transform 0.2s'}} />
+        <Form.Item
+          style={{color: '#13c2c2'}}
+          shouldUpdate={
+            (prevValues, currentValues) => {
+              return prevValues.get !== currentValues.get
+            }
+          }
+        >
+          {({ getFieldValue }) => {
+            return getFieldValue(["get", index, "url"])
+          }}
+        </Form.Item>
       </NavLink>
-      <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}}>Delete API</Button>
+      <Button type="link" style={{color: '#f5222d'}}>Delete API</Button>
     </div>
     <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff', display: hide ? 'none' : 'block'}}>
-      <label htmlFor={`${prefix}.${api}.status`}>status: </label>
-      <Input
-        id={`${prefix}.${api}.status`}
-        data-key={`${prefix}.${api}.status`}
-        data-variant={configurations.status.variant}
-        value={routes.status}
-        onChange={handleChange}
-      />
-      <br />
-      <label>Response Data Type:</label>
-      <Button
-        type="link"
-        onClick={
-          event => {
-            insertResponseData(event, start, end, api, 'object')
-          }
-        }
-        disabled={!Array.isArray(routes.data) && typeof routes.data === 'object'}
+      <Form.Item
+        label="Status"
+        name={[index, "status"]}
+        rules={[
+          { type: 'integer', transform: value => Number(value) }
+        ]}
       >
-        Object
-      </Button>
-      <Button
-        type="link"
-        onClick={
-          event => {
-            insertResponseData(event, start, end, api, 'array')
-          }
-        }
-        disabled={Array.isArray(routes.data)}
-      >
-        Array
-      </Button>
-      {
-        Array.isArray(routes.data) ?
-        <ResponseArray
-          prefix={`${prefix}.${api}`}
-          api='data'
-          routes={routes.data}
-          configurations={configurations.data}
-          insertData={insertData}
-          insertParam={insertParam}
-          handleChange={handleChange}
-          handleInsertChange={handleInsertChange}
-          deleteParam={deleteParam}
-        /> :
-        <ResponseObject
-          prefix={`${prefix}.${api}`}
-          api='data'
-          routes={routes.data}
-          configurations={configurations.data}
-          insertData={insertData}
-          insertParam={insertParam}
-          handleChange={handleChange}
-          handleInsertChange={handleInsertChange}
-          deleteParam={deleteParam}
-        />
-      }
+        <Input />
+      </Form.Item>
     </div>
   </div>
 }

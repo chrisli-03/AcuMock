@@ -4,6 +4,8 @@ import { useParams, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { Form, Input, Button } from 'antd'
 
+import APITree from '../components/APITree'
+import apiType from '../enums/apiType'
 import { getMockServer } from '../store/mockServer/actions'
 import { createAlert } from '../store/alert/actions'
 
@@ -21,7 +23,16 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
 
   useEffect(() => {
     if (mockServer && !mockServer.fetching) {
-      form.setFieldsValue(mockServer.data)
+      form.setFieldsValue({
+        name: mockServer.data.name,
+        description: mockServer.data.description,
+        redirectAddress: mockServer.data.redirectAddress,
+        get: mockServer.data.api.filter(api => api.type === apiType.GET),
+        post: mockServer.data.api.filter(api => api.type === apiType.POST),
+        put: mockServer.data.api.filter(api => api.type === apiType.PUT),
+        patch: mockServer.data.api.filter(api => api.type === apiType.PATCH),
+        delete: mockServer.data.api.filter(api => api.type === apiType.DELETE)
+      })
     }
   }, [form, mockServer])
 
@@ -80,7 +91,15 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
       </Form.Item>
       <Form.Item>
         <div>Get</div>
-
+        {
+          <Form.List name="get">
+            {(fields, { add, remove }) =>
+              fields.map((field, index) =>
+                <APITree field={field} index={index} />
+              )
+            }
+          </Form.List>
+        }
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{marginRight: '0.5rem'}}>Submit</Button>
