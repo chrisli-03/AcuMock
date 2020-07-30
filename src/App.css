@@ -47,11 +47,11 @@
   background-color: #52c41a;
 }
 
-.ant-form-item {
-  margin-bottom: 0.5rem !important;
+.App .ant-form-item {
+  margin-bottom: 0.5rem;
 }
 
-* > .ant-form-item:last-child {
+.App * > .ant-form-item:last-child {
   margin-bottom: 0 !important;
 }
 

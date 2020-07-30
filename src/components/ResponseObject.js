@@ -1,101 +1,17 @@
 import React from 'react'
-import { Input, Select, Radio, Button } from 'antd'
+import { Form, Input, Select, Radio, Button } from 'antd'
 
+import responseType from '../enums/responseType'
 import ResponseArray from './ResponseArray'
-
+import APITree from './APITree'
 const { Option } = Select
 
 const ResponseObject = ({
-  prefix,
-  api,
-  routes,
-  configurations,
-  insertData,
-  insertParam,
-  handleChange,
-  handleInsertChange,
-  deleteParam
+  deletable = true,
+  field,
+  route
 }) => {
-  if (!routes) return <div></div>
-  const obj = Object.keys(routes).map(key => {
-    const id = `${prefix}.${api}.${key}`
-    if (Array.isArray(routes[key])) {
-      return (
-        <div key={id} style={{ marginBottom: '0.5rem' }}>
-          <ResponseArray
-            prefix={`${prefix}.${api}`}
-            api={key}
-            routes={routes[key]}
-            configurations={configurations[key]}
-            insertData={insertData[api]}
-            insertParam={insertParam}
-            handleChange={handleChange}
-            handleInsertChange={handleInsertChange}
-            deleteParam={deleteParam}
-          />
-        </div>
-      )
-    }
-    if (typeof routes[key] === 'object') {
-      return (
-        <div key={id}>
-          <ResponseObject
-            prefix={`${prefix}.${api}`}
-            api={key}
-            routes={routes[key]}
-            configurations={configurations[key]}
-            insertData={insertData[api]}
-            insertParam={insertParam}
-            handleChange={handleChange}
-            handleInsertChange={handleInsertChange}
-            deleteParam={deleteParam}
-          />
-        </div>
-      )
-    }
-    const configuration = configurations[key]
-    if (!configuration) return null
-    switch (configuration.variant) {
-      case 'text':
-      case 'number':
-        return (
-          <div key={id} style={{marginBottom: '0.5rem'}}>
-            <label htmlFor={id}>{key}: </label>
-            <Input
-              id={id}
-              data-key={id}
-              data-variant={configuration.variant}
-              value={routes[key]}
-              onChange={handleChange}
-              addonBefore={configuration.variant}
-            />
-            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button>
-          </div>
-        )
-      case 'boolean':
-        return (
-          <div key={id} style={{marginBottom: '0.5rem'}}>
-            <label htmlFor={id}>{key}: </label>
-            <Radio.Group
-              id={id}
-              onChange={handleChange}
-              value={routes[key]}
-            >
-              <Radio value={true} data-variant={configuration.variant} data-key={id}>True</Radio>
-              <Radio value={false} data-variant={configuration.variant} data-key={id}>False</Radio>
-            </Radio.Group>
-            <Button type="link" onClick={event => deleteParam(event, `${prefix}.${api}`, key)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button>
-          </div>
-        )
-      default:
-        return null
-    }
-  })
-  const selectType = <Select
-    data-key={`${prefix}._${api}.variant`}
-    value={insertData[`_${api}`] ? insertData[`_${api}`].variant : ''}
-    onChange={event => handleInsertChange({ target: { value: event, dataset: { key : `${prefix}._${api}.variant` } }, preventDefault: () => {} }) }
-  >
+  const selectType = <Select style={{ width: 100 }}>
     <Option value="" disabled>--Select Value Type--</Option>
     <Option value="text">text</Option>
     <Option value="number">number</Option>
@@ -103,29 +19,83 @@ const ResponseObject = ({
     <Option value="object">object</Option>
     <Option value="array">array</Option>
   </Select>
-  return <div>
-    <div>
-      {api} (Object)
-      {
-        api !== 'data' || !/^\.routes\.(get|post|put|patch|delete)\.(\/.)+/.test(prefix) ?
-        <Button type="link" onClick={event => deleteParam(event, prefix, api)} style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button> :
-        null
+  return <Form.Item
+    shouldUpdate={
+      (prevValues, currentValues) => {
+        return prevValues !== currentValues
       }
-    </div>
-    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
-      {obj}
-      <div style={{marginBottom: '0.5rem'}}>
-        <Input
-          data-key={`${prefix}._${api}.name`}
-          value={insertData[`_${api}`] ? insertData[`_${api}`].name : ''}
-          onChange={handleInsertChange}
-          placeholder="New Key"
-          addonBefore={selectType}
-        />
-        <Button type="link" onClick={event => insertParam(event, prefix, api)} style={{color: '#52c41a'}}>Add Key</Button>
-      </div>
-    </div>
-  </div>
+    }
+  >
+    {({ getFieldValue }) => {
+      switch(getFieldValue([...route, "type"])) {
+        case responseType.STRING:
+        case responseType.NUMBER:
+          return <div className="d-flex">
+            <Form.Item
+              style={{marginBottom: 0}}
+              label={getFieldValue([...route, "response_key"])}
+              name={[field.name, "response_value"]}
+            >
+              <Input addonBefore={selectType}  />
+            </Form.Item>
+            {
+              deletable ?
+                <Button type="link" style={{color: '#f5222d' }} tabIndex={-1}>Delete Key</Button> :
+                null
+            }
+          </div>
+        case responseType.BOOLEAN:
+          return <div className="d-flex">
+            <Form.Item
+              style={{ marginBottom: 0 }}
+              label={getFieldValue([...route, "response_key"])}
+              name={[field.name, "response_value"]}
+            >
+              <Radio.Group>
+                <Radio value={true}>True</Radio>
+                <Radio value={false}>False</Radio>
+              </Radio.Group>
+            </Form.Item>
+            {
+              deletable ?
+                <Button type="link" style={{color: '#f5222d' }} tabIndex={-1}>Delete Key</Button> :
+                null
+            }
+          </div>
+        case responseType.OBJECT:
+          return <div>
+            <div>
+              {getFieldValue([...route, "response_key"])} (Object)
+              {
+                deletable ?
+                <Button type="link" style={{color: '#f5222d'}} tabIndex={-1}>Delete Key</Button> :
+                null
+              }
+            </div>
+            <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
+              <Form.List name={[field.name, "children"]}>
+                {(fields, { add, remove }) =>
+                  fields.map((field, index) =>
+                    <ResponseObject field={field} route={[...route, "children", index]} key={index} />
+                  )
+                }
+              </Form.List>
+              <div>
+                <Input
+                  placeholder="New Key"
+                  addonBefore={selectType}
+                />
+                <Button type="link" style={{color: '#52c41a'}}>Add Key</Button>
+              </div>
+            </div>
+          </div>
+        case responseType.Array:
+          break
+        default:
+          return <div>Unknown Type</div>
+      }
+    }}
+  </Form.Item>
 }
 
 export default ResponseObject

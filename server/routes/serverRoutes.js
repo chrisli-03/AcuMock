@@ -60,6 +60,7 @@ function setupServerRoutes(app) {
       if (error) throw error
       const serverList = await serverRepository.findAll(connection)
       res.status(200).send(serverList.map(server => new Server(server)))
+      connection.release()
     })
   }))
 
@@ -68,8 +69,23 @@ function setupServerRoutes(app) {
       if (error) throw error
       const server = (await serverRepository.findByServerName(connection, req.params.serverName))[0]
       const apiList = await apiRepository.findByServerID(connection, server.id)
+      for (let i = 0; i < apiList.length; i++) {
+        let responseList = await responseRepository.findByAPIID(connection, apiList[i].id)
+        let responseHead = null
+        const hashmap = new Map()
+        responseList.forEach(response => {
+          hashmap.set(response.id, response)
+          response.children = []
+        })
+        responseList.forEach(response => {
+          if (response.parent === null) responseHead = response
+          else hashmap.get(response.parent).children.push(response)
+        })
+        apiList[i].response = [responseHead]
+      }
       server.api = apiList
       res.status(200).send(server)
+      connection.release()
     })
   }))
 
@@ -78,6 +94,7 @@ function setupServerRoutes(app) {
       if (error) throw error
       const apiList = await apiRepository.findByServerID(connection, req.params.serverID)
       res.status(200).send(apiList)
+      connection.release()
     })
   }))
 
@@ -86,6 +103,7 @@ function setupServerRoutes(app) {
       if (error) throw error
       const apiList = await responseRepository.findByAPIID(connection, req.params.apiID)
       res.status(200).send(apiList)
+      connection.release()
     })
   }))
 
@@ -130,6 +148,8 @@ function setupServerRoutes(app) {
             })
           } catch(error) {
             reject(error)
+          } finally {
+            connection.release()
           }
         })
       })

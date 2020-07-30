@@ -58,12 +58,6 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
     history.push('/')
   }
 
-  const generateRouteForm = () => {
-    return <div>place holder</div>
-  }
-
-  const routeForm = generateRouteForm()
-
   return (
     <Form
       id="form"
@@ -95,7 +89,7 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
           <Form.List name="get">
             {(fields, { add, remove }) =>
               fields.map((field, index) =>
-                <APITree field={field} index={index} />
+                <APITree field={field} index={index} route={["get", index]} />
               )
             }
           </Form.List>
