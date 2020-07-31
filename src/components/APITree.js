@@ -58,7 +58,12 @@ const APITree = ({
         <Form.List name={[field.name, "response"]}>
           {(fields, { add, remove }) =>
             fields.map((field, index) =>
-              <ResponseObject field={field} deletable={false} route={[...route,"response", index]} />
+              <ResponseObject
+                field={field}
+                deletable={false}
+                route={[...route, "response", index]}
+                key={index}
+              />
             )
           }
         </Form.List>
