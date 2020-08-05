@@ -122,8 +122,8 @@ function setupServerRoutes(app) {
                 response.parent = parent
                 const responseData = new Response(response)
                 const responseId = await responseRepository.insert(connection, responseData)
-                if (responseData.children) {
-                  await insertResponse(responseData.children, api, responseId.insertId)
+                if (response.children) {
+                  await insertResponse(response.children, api, responseId.insertId)
                 }
               }
             }

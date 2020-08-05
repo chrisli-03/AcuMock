@@ -1,5 +1,5 @@
 import React from 'react'
-import ResponseObject from './ResponseObject'
+import Response from './Response'
 import { Button, Input, Radio, Select } from 'antd'
 
 const { Option } = Select
@@ -32,7 +32,7 @@ const ResponseArray = ({
       />
     }
     if (typeof route === 'object') {
-      return <ResponseObject
+      return <Response
         key={`${id}`}
         prefix={`${prefix}.${api}`}
         api={`${i}`}
