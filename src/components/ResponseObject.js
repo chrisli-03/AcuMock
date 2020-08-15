@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Form, Select } from 'antd'
+import { Button, Form, Input } from 'antd'
 
 import Response from './Response'
 
-const ResponseArray = ({
+const ResponseObject = ({
   field,
   route,
   getFieldValue,
@@ -16,10 +16,10 @@ const ResponseArray = ({
 }) => {
   return <div>
     <div>
-      {getFieldValue([...route, "response_key"])} (Array)
+      {getFieldValue([...route, "response_key"])} (Object)
       {deleteBtn}
     </div>
-    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #fa8c16'}}>
+    <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff'}}>
       <Form.List name={[field.name, "children"]}>
         {(fields, { add, remove }) =>
           <React.Fragment>
@@ -34,12 +34,17 @@ const ResponseArray = ({
               )
             }
             <div>
-              {selectType}
+              <Input
+                placeholder="New Key"
+                addonBefore={selectType}
+                value={newKey}
+                onChange={event => {setNewKey(event.target.value)}}
+              />
               <Button
                 type="link"
                 style={{color: '#52c41a'}}
                 onClick={() => {
-                  if (newType === '') return
+                  if (newKey === '' || newType === '' || getFieldValue([...route, newKey])) return
                   setNewKey('')
                   setNewType('')
                   add({
@@ -61,4 +66,4 @@ const ResponseArray = ({
   </div>
 }
 
-export default ResponseArray
+export default ResponseObject
