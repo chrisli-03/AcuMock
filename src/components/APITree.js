@@ -4,12 +4,14 @@ import { Button, Input, Radio, Form } from 'antd'
 import { RightOutlined } from '@ant-design/icons'
 
 import Response from './Response'
+import responseType from '../enums/responseType'
 
 const APITree = ({
   field,
   index,
   route
 }) => {
+  // todo: change back after done development
   // const [hide, setHide] = useState(true)
   const [hide, setHide] = useState(false)
 
@@ -43,12 +45,15 @@ const APITree = ({
             </Form.Item>
             <Form.Item name={[field.name, "response", "0", "type"]} label="Response Type:">
               <Radio.Group>
-                <Radio.Button value={3}>Object</Radio.Button>
-                <Radio.Button value={4}>Array</Radio.Button>
+                <Radio.Button value={responseType.STRING}>String</Radio.Button>
+                <Radio.Button value={responseType.NUMBER}>Number</Radio.Button>
+                <Radio.Button value={responseType.BOOLEAN}>Boolean</Radio.Button>
+                <Radio.Button value={responseType.OBJECT}>Object</Radio.Button>
+                <Radio.Button value={responseType.ARRAY}>Array</Radio.Button>
               </Radio.Group>
             </Form.Item>
             <Form.List name={[field.name, "response"]}>
-              {(fields, { add, remove }) =>
+              {(fields, { _, remove }) =>
                 fields.map((field, index) =>
                   <Response
                     field={field}

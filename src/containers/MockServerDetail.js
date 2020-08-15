@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
-import axios from 'axios'
 import { Form, Input, Button } from 'antd'
 
 import APITree from '../components/APITree'

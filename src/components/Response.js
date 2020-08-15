@@ -29,7 +29,7 @@ const Response = ({
     </Button> :
     null
 
-  const selectType = <Select value={newType} onChange={event => {setNewType(event)}} style={{width: 200}}>
+  const selectType = <Select value={newType} onChange={event => {setNewType(event)}} style={{width: 150}}>
     <Option value="" disabled>--Select Type--</Option>
     <Option value={responseType.STRING}>String</Option>
     <Option value={responseType.NUMBER}>Number</Option>

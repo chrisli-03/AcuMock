@@ -13,7 +13,7 @@ const ResponseString = ({
       label={getFieldValue([...route, "response_key"])}
       name={[field.name, "response_value"]}
     >
-      <Input addonBefore="type" />
+      <Input addonBefore="String" />
     </Form.Item>
     {deleteBtn}
   </div>
