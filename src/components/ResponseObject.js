@@ -45,8 +45,6 @@ const ResponseObject = ({
                 style={{color: '#52c41a'}}
                 onClick={() => {
                   if (newKey === '' || newType === '' || getFieldValue([...route, newKey])) return
-                  setNewKey('')
-                  setNewType('')
                   add({
                     children: [],
                     fixed: 1,
@@ -54,6 +52,8 @@ const ResponseObject = ({
                     response_value: null,
                     type: Number(newType)
                   })
+                  setNewKey('')
+                  setNewType('')
                 }}
               >
                 Add Key

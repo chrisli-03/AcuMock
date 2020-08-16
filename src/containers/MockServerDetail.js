@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { useParams, useHistory } from 'react-router-dom'
 import { Form, Input, Button } from 'antd'
 
-import APITree from '../components/APITree'
 import apiType from '../enums/apiType'
 import { getMockServer } from '../store/mockServer/actions'
 import { createAlert } from '../store/alert/actions'
+
+import RequestList from '../components/RequestList'
 
 import Spinner from '../components/Spinner'
 
@@ -26,11 +27,11 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
         name: mockServer.data.name,
         description: mockServer.data.description,
         redirectAddress: mockServer.data.redirectAddress,
-        get: mockServer.data.api.filter(api => api.type === apiType.GET),
-        post: mockServer.data.api.filter(api => api.type === apiType.POST),
-        put: mockServer.data.api.filter(api => api.type === apiType.PUT),
-        patch: mockServer.data.api.filter(api => api.type === apiType.PATCH),
-        delete: mockServer.data.api.filter(api => api.type === apiType.DELETE)
+        [apiType.GET]: mockServer.data.api.filter(api => api.type === apiType.GET),
+        [apiType.POST]: mockServer.data.api.filter(api => api.type === apiType.POST),
+        [apiType.PUT]: mockServer.data.api.filter(api => api.type === apiType.PUT),
+        [apiType.PATCH]: mockServer.data.api.filter(api => api.type === apiType.PATCH),
+        [apiType.DELETE]: mockServer.data.api.filter(api => api.type === apiType.DELETE)
       })
     }
   }, [form, mockServer])
@@ -83,16 +84,24 @@ const MockServerDetail = ({ mockServers, getMockServer, createAlert }) => {
         <Input />
       </Form.Item>
       <Form.Item>
-        <div>Get</div>
-        {
-          <Form.List name="get">
-            {(fields, { add, remove }) =>
-              fields.map((field, index) =>
-                <APITree field={field} index={index} route={["get", index]} />
-              )
-            }
-          </Form.List>
-        }
+        <div>Get Requests</div>
+        <RequestList type={apiType.GET} />
+      </Form.Item>
+      <Form.Item>
+        <div>Post Requests</div>
+        <RequestList type={apiType.POST} />
+      </Form.Item>
+      <Form.Item>
+        <div>Put Requests</div>
+        <RequestList type={apiType.PUT} />
+      </Form.Item>
+      <Form.Item>
+        <div>Patch Requests</div>
+        <RequestList type={apiType.PATCH} />
+      </Form.Item>
+      <Form.Item>
+        <div>Delete Requests</div>
+        <RequestList type={apiType.DELETE} />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{marginRight: '0.5rem'}}>Submit</Button>

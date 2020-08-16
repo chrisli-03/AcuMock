@@ -40,8 +40,6 @@ const ResponseArray = ({
                 style={{color: '#52c41a'}}
                 onClick={() => {
                   if (newType === '') return
-                  setNewKey('')
-                  setNewType('')
                   add({
                     children: [],
                     fixed: 1,
@@ -49,6 +47,8 @@ const ResponseArray = ({
                     response_value: null,
                     type: Number(newType)
                   })
+                  setNewKey('')
+                  setNewType('')
                 }}
               >
                 Add Key

@@ -7,9 +7,11 @@ import Response from './Response'
 import responseType from '../enums/responseType'
 
 const APITree = ({
+  apiType,
   field,
   index,
-  route
+  route,
+  remove
 }) => {
   // todo: change back after done development
   // const [hide, setHide] = useState(true)
@@ -19,7 +21,8 @@ const APITree = ({
     style={{color: '#13c2c2'}}
     shouldUpdate={
       (prevValues, currentValues) => {
-        return prevValues.get[index].url !== currentValues.get[index].url
+        if (prevValues[apiType].length !== currentValues[apiType].length) return true
+        return prevValues[apiType][index].url !== currentValues[apiType][index].url
       }
     }
   >
@@ -30,7 +33,7 @@ const APITree = ({
             <RightOutlined className={`${hide ? '' : 'rotate-90'}`} style={{transition: 'transform 0.2s'}} />
             <div>{getFieldValue([...route, "url"])}</div>
           </NavLink>
-          <Button type="link" style={{color: '#f5222d'}}>Delete API</Button>
+          <Button type="link" style={{color: '#f5222d'}} onClick={() => {remove(index)}}>Delete API</Button>
         </div>
         {
           hide ? null : <div style={{marginLeft: '1rem', paddingLeft: '0.5rem', borderLeft: '1px solid #1890ff' }}>
